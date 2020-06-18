@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/gameItem"
+            android:icon="@drawable/playicon"
+            android:title="게임매칭" />
+    <item
+            android:id="@+id/forumsItem"
+            android:icon="@drawable/forumsicon"
+            android:title="게시판" />
+    <item
+            android:id="@+id/profileItem"
+            android:icon="@drawable/profile_icon"
+            android:title="프로필" />
+</menu>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.modifyForum.ModifyForumActivity">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/ic_arrow_back_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="글수정"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="45dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/MF_saveButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/write_forum_save_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0.5dp"
+        android:layout_height="28dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/MF_saveButton"
+        app:layout_constraintEnd_toStartOf="@id/MF_saveButton"
+        app:layout_constraintStart_toEndOf="@id/MF_cameraButton"
+        app:layout_constraintTop_toTopOf="@id/MF_saveButton" />
+
+    <ImageButton
+        android:id="@+id/MF_cameraButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/write_forum_camera_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@id/MF_saveButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/MF_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:gravity="start"
+        android:hint="내용을 입력하세요."
+        android:padding="10dp"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintTop_toBottomOf="@+id/MF_title" />
+
+    <EditText
+        android:id="@+id/MF_title"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@null"
+        android:gravity="start"
+        android:hint="제목을 입력하세요."
+        android:padding="10dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@id/MF_subject"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#B7B7B7"
+        app:layout_constraintTop_toBottomOf="@+id/MF_title" />
+
+    <Spinner
+        android:id="@+id/MF_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:entries="@array/interest"
+        app:layout_constraintBottom_toBottomOf="@+id/MF_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/MF_title" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/MF_showImage1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/MF_showImage1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/noimage"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ImageButton
+        android:id="@+id/MF_showImage2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/noimage"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toEndOf="@id/MF_showImage1"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ImageButton
+        android:id="@+id/MF_showImage3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/noimage"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toEndOf="@id/MF_showImage2"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ImageButton
+        android:id="@+id/MF_showImage4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/noimage"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toEndOf="@id/MF_showImage3"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ImageButton
+        android:id="@+id/MF_showImage5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/noimage"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toEndOf="@id/MF_showImage4"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <ProgressBar
+        android:id="@+id/MF_progressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

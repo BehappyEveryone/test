@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">chatground2</string>
+    <string name="title_activity_findingchat">findingchat</string>
+    <string name="title_activity_register">register</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gameExplanation">이 게임은 정치와 같은 평소에 우리가 꺼려하던 주제들에 대해 진솔하게 토론할 공간을 제공해주는 동시에 반대쪽 의견을 자신의 논리로 설득시켜 몇 명이 설득 당했느냐에 따라 승패를 나눠주는 게임입니다.</string>
+
+    <string-array name="interest">
+        <item>기타</item>
+        <item>정치</item>
+        <item>경제</item>
+        <item>종교</item>
+        <item>연예</item>
+        <item>동물</item>
+        <item>게임</item>
+        <item>음식</item>
+        <item>패션</item>
+        <item>영화</item>
+        <item>스포츠</item>
+        <item>철학</item>
+        <item>연애</item>
+        <item>음악</item>
+    </string-array>
+
+    <string-array name="data_search">
+
+        <item>제목</item>
+
+        <item>내용</item>
+
+        <item>제목+내용</item>
+
+    </string-array>
+</resources>

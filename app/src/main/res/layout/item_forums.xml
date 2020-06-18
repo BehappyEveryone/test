@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/forumCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginBottom="1dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginRight="2dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/FI_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/FI_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="[주제]"
+            android:textColor="@color/blue"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/FI_date" />
+
+        <TextView
+            android:id="@+id/FI_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:text="제목"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/FI_subject"
+            app:layout_constraintTop_toTopOf="@+id/FI_subject" />
+
+        <TextView
+            android:id="@+id/FI_nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="50dp"
+            android:text="닉네임"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/FI_recommendicon"
+            app:layout_constraintStart_toStartOf="@id/FI_subject"
+            app:layout_constraintTop_toBottomOf="@id/FI_title" />
+
+        <ImageView
+            android:id="@+id/FI_commentIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/ic_comment_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/FI_nickname"
+            app:layout_constraintEnd_toStartOf="@id/FI_commentNum"
+            app:layout_constraintTop_toTopOf="@id/FI_nickname" />
+
+        <TextView
+            android:id="@+id/FI_commentNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1개"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/FI_commentIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/FI_commentIcon" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0.5dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/FI_commentIcon"
+            app:layout_constraintEnd_toStartOf="@id/FI_commentIcon"
+            app:layout_constraintTop_toTopOf="@id/FI_commentIcon" />
+
+        <ImageView
+            android:id="@+id/FI_recommendicon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/forumsitem_recommend"
+            app:layout_constraintBottom_toBottomOf="@id/FI_recommendtext"
+            app:layout_constraintEnd_toStartOf="@id/FI_recommendtext"
+            app:layout_constraintTop_toTopOf="@id/FI_recommendtext" />
+
+        <ImageView
+            android:id="@+id/FI_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/forumsitem_image"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/FI_recommendicon"
+            app:layout_constraintEnd_toStartOf="@id/FI_recommendicon"
+            app:layout_constraintTop_toTopOf="@id/FI_recommendicon" />
+
+        <TextView
+            android:id="@+id/FI_recommendtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="1개"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/FI_commentIcon"
+            app:layout_constraintEnd_toStartOf="@id/view"
+            app:layout_constraintTop_toTopOf="@id/FI_commentIcon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

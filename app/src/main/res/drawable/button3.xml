@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:type="linear"
+                android:startColor="@color/white"
+                android:endColor="@color/black"/>
+            <stroke
+                android:width="2dp"
+                android:color="#4b4c4c" />
+            <corners
+                android:bottomLeftRadius="12dp"
+                android:bottomRightRadius="12dp"
+                android:topLeftRadius="12dp"
+                android:topRightRadius="12dp" />
+        </shape>
+    </item>
+
+<!--<item>-->
+    <!--<layer-list>-->
+        <!--&lt;!&ndash; shadow (밑으로) : 그림자 &ndash;&gt;-->
+        <!--<item android:top="200dp">-->
+            <!--<shape>-->
+                <!--<gradient android:angle="270"-->
+                          <!--android:endColor="#E2E2E2" android:startColor="#BABABA" />-->
+                <!--<corners android:radius="200dp" />-->
+                <!--<solid android:color="#1f000000" />-->
+            <!--</shape>-->
+        <!--</item>-->
+        <!--&lt;!&ndash; background (위로) &ndash;&gt;-->
+        <!--<item android:bottom="3dp">-->
+            <!--<shape>-->
+                <!--<corners android:radius="3dp" />-->
+                <!--<solid android:color="#E6FFFF" />-->
+                <!--<stroke android:width="1dp" android:color="#8B00FF" />-->
+            <!--</shape>-->
+        <!--</item>-->
+    <!--</layer-list>-->
+<!--</item>-->
+</selector>

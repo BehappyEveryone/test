@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="게시판"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="45dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/F_searchButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/forums_search_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0.5dp"
+        android:layout_height="28dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/F_searchButton"
+        app:layout_constraintEnd_toStartOf="@id/F_searchButton"
+        app:layout_constraintStart_toEndOf="@id/F_writeButton"
+        app:layout_constraintTop_toTopOf="@id/F_searchButton" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0.5dp"
+        android:layout_height="28dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/F_searchButton"
+        app:layout_constraintEnd_toStartOf="@id/F_writeButton"
+        app:layout_constraintStart_toEndOf="@id/F_bestForumsButton"
+        app:layout_constraintTop_toTopOf="@id/F_searchButton" />
+
+    <ImageButton
+        android:id="@+id/F_writeButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/forums_write_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@id/F_searchButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/F_bestForumsButton"
+        android:layout_width="27dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/forums_bestforums_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@id/F_writeButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/F_root"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@+id/view">
+
+        <Spinner
+            android:id="@+id/F_searchSpinner"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:entries="@array/data_search"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:layout_marginEnd="20dp"
+            android:id="@+id/F_searchEdit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/F_searchSpinner" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/F_swipeRefresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/F_root">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/F_forumRecycle"
+            android:layout_width="match_parent"
+            android:background="#dddddd"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/F_progressBar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/Widget.AppCompat.ProgressBar"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

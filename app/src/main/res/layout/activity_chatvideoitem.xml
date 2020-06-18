@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical"
+    android:padding="1dp">
+
+    <TextView
+            android:id="@+id/VideoCsystembox"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:layout_gravity="center"
+            android:background="@drawable/datebg"
+            android:textSize="10dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/VideoCleftitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:orientation="horizontal">
+
+        <ImageView
+                android:src="@drawable/default_profile"
+            android:id="@+id/VideoCLprofile"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/imageboder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/VideoCLnickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center"
+            android:textSize="13dp"
+            app:layout_constraintStart_toEndOf="@id/VideoCLprofile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+                android:src="@drawable/videoplayicon"
+                android:id="@+id/VideoCLvideo"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:layout_margin="2dp"
+                app:layout_constraintStart_toEndOf="@id/VideoCLprofile"
+                app:layout_constraintTop_toBottomOf="@id/VideoCLnickname" />
+
+        <TextView
+            android:id="@+id/VideoCLdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="10dp"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/VideoCLvideo" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/VideoCrightitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
+
+        <ImageButton
+                android:src="@drawable/videoplayicon"
+                android:id="@+id/VideoCRvideo"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:layout_margin="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/VideoCRdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginRight="10dp"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/VideoCRvideo" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
