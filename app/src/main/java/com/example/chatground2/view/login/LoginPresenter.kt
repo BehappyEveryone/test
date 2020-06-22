@@ -1,11 +1,9 @@
 package com.example.chatground2.view.login
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.example.chatground2.model.Constants.SHARED_PREFERENCE
+import com.example.chatground2.`class`.Shared
 import com.example.chatground2.model.dao.Model
 import com.example.chatground2.model.dto.UserDto
-import com.google.gson.Gson
 
 
 class LoginPresenter(
@@ -13,16 +11,12 @@ class LoginPresenter(
     val view: LoginContract.ILoginView
 ) : LoginContract.ILoginPresenter, LoginContract.Listener {
     private var model: Model = Model(context)
-
-    private val sp: SharedPreferences =
-        context.getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    private val spEdit: SharedPreferences.Editor = sp.edit()
-    private val gson = Gson()
+    private var shared:Shared = Shared(context)
 
     override fun autoLogin() {
-        if(sp.getBoolean("Auto",false)){
-            view.setEmailText(sp.getString("AutoEmail",null))
-            view.setPasswordText(sp.getString("AutoPassword",null))
+        if(shared.getAuto()){
+            view.setEmailText(shared.getAutoEmail())
+            view.setPasswordText(shared.getAutoPassword())
             view.clickSignIn()
         }
     }
@@ -61,15 +55,15 @@ class LoginPresenter(
     }
 
     override fun onLoginSuccess(userDto: UserDto) {//로그인 할 때 유저 저장
-        val userJson = gson.toJson(userDto)
-        spEdit.clear()
-        spEdit.putString("User", userJson)
+        val userJson = shared.gsonToJson(userDto)
+        shared.editorClear()
+        shared.setSharedPreference("User", userJson)
         if(view.isAutoLogin()) {
-            spEdit.putBoolean("Auto", true)
-            spEdit.putString("AutoEmail",view.getEmailText())
-            spEdit.putString("AutoPassword",view.getPasswordText())
+            shared.setSharedPreference("Auto",true)
+            shared.setSharedPreference("AutoEmail",view.getEmailText())
+            shared.setSharedPreference("AutoPassword",view.getPasswordText())
         }
-        spEdit.commit()
+        shared.editorCommit()
         view.setEnable(true)
         view.toastMessage("로그인 성공")
         view.finishActivity()

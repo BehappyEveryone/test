@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Owner\\chatground2\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-si\\values-si.xml",
+            "outputFile": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-si/values-si.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\core-1.1.0.aar\\23302a8557625a6117e5370e243ba162\\res\\values-si\\values-si.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/browser-1.2.0.aar/be03e512df21bc5410f32028de1d6326/res/values-si/values-si.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,163,270,386",
+                        "endColumns": "107,106,115,103",
+                        "endOffsets": "158,265,381,485"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "2821,2929,3036,3152",
+                        "endColumns": "107,106,115,103",
+                        "endOffsets": "2924,3031,3147,3251"
+                    }
+                },
+                {
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/core-1.1.0.aar/f4d2a0a518883de0ceb15fe4f8aa7df9/res/values-si/values-si.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -21,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-1.1.0.aar\\0bd5b5909435621fef41b1b88fca9715\\res\\values-si\\values-si.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/values-si/values-si.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -35,23 +52,6 @@
                         "startOffsets": "105,221,328,435,518,623,739,829,916,1007,1099,1193,1287,1388,1481,1576,1670,1761,1852,1935,2044,2148,2246,2356,2456,2563,2722,3256",
                         "endColumns": "115,106,106,82,104,115,89,86,90,91,93,93,100,92,94,93,90,90,82,108,103,97,109,99,106,158,98,80",
                         "endOffsets": "216,323,430,513,618,734,824,911,1002,1094,1188,1282,1383,1476,1571,1665,1756,1847,1930,2039,2143,2241,2351,2451,2558,2717,2816,3332"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\browser-1.2.0.aar\\32a3b0aee040b075e323d1d13be3869e\\res\\values-si\\values-si.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,163,270,386",
-                        "endColumns": "107,106,115,103",
-                        "endOffsets": "158,265,381,485"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "2821,2929,3036,3152",
-                        "endColumns": "107,106,115,103",
-                        "endOffsets": "2924,3031,3147,3251"
                     }
                 }
             ]

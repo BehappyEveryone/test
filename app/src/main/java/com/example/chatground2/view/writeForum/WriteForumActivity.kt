@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,8 +13,9 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.chatground2.model.Constants.OPEN_GALLERY
+import com.example.chatground2.model.RequestCode.OPEN_GALLERY
 import com.example.chatground2.R
+import com.example.chatground2.model.RequestCode
 import kotlinx.android.synthetic.main.activity_write_forum.*
 
 class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumView,
@@ -21,6 +23,7 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
 
     private var presenter: WriteForumPresenter? = null
     private var arrayAdapter: ArrayAdapter<CharSequence>? = null
+    private var imageViewList: Array<ImageButton>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,8 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
         WF_showImage4.setOnClickListener(this)
         WF_showImage5.setOnClickListener(this)
         backButton.setOnClickListener(this)
+
+        imageViewList = arrayOf(WF_showImage1,WF_showImage2,WF_showImage3,WF_showImage4,WF_showImage5)
     }
 
     override fun onClick(v: View?) {
@@ -94,12 +99,20 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
             .show()
     }
 
+    override fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                OPEN_GALLERY -> {
+                OPEN_GALLERY.code -> {
                     presenter?.galleryResult(data)
                 }
             }
@@ -109,49 +122,16 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
     }
 
     override fun setImage(imagePathList: ArrayList<String>) {
-        when {
-            imagePathList.size == 0 -> {
-                WF_showImage1.visibility = View.INVISIBLE
-                WF_showImage2.visibility = View.INVISIBLE
-                WF_showImage3.visibility = View.INVISIBLE
-                WF_showImage4.visibility = View.INVISIBLE
-                WF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 1 -> {
-                setImageBitmap(WF_showImage1, imagePathList[0])
-                WF_showImage2.visibility = View.INVISIBLE
-                WF_showImage3.visibility = View.INVISIBLE
-                WF_showImage4.visibility = View.INVISIBLE
-                WF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 2 -> {
-                setImageBitmap(WF_showImage1, imagePathList[0])
-                setImageBitmap(WF_showImage2, imagePathList[1])
-                WF_showImage3.visibility = View.INVISIBLE
-                WF_showImage4.visibility = View.INVISIBLE
-                WF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 3 -> {
-                setImageBitmap(WF_showImage1, imagePathList[0])
-                setImageBitmap(WF_showImage2, imagePathList[1])
-                setImageBitmap(WF_showImage3, imagePathList[2])
-                WF_showImage4.visibility = View.INVISIBLE
-                WF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 4 -> {
-                setImageBitmap(WF_showImage1, imagePathList[0])
-                setImageBitmap(WF_showImage2, imagePathList[1])
-                setImageBitmap(WF_showImage3, imagePathList[2])
-                setImageBitmap(WF_showImage4, imagePathList[3])
-                WF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 5 -> {
-                setImageBitmap(WF_showImage1, imagePathList[0])
-                setImageBitmap(WF_showImage2, imagePathList[1])
-                setImageBitmap(WF_showImage3, imagePathList[2])
-                setImageBitmap(WF_showImage4, imagePathList[3])
-                setImageBitmap(WF_showImage5, imagePathList[4])
-            }
+
+        var extra:Int = -1
+        imagePathList.forEachIndexed {index: Int, s: String ->
+            extra = index
+            imageViewList?.get(index)?.visibility = View.VISIBLE
+            imageViewList?.get(index)?.let { setImageBitmap(it,s) }
+        }
+
+        for(i in extra+1 until 5){
+            imageViewList?.get(i)?.visibility = View.INVISIBLE
         }
     }
 
@@ -159,12 +139,6 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
         imageButton.visibility = View.VISIBLE
         val bitmap: Bitmap = BitmapFactory.decodeFile(path)
         imageButton.setImageBitmap(bitmap)
-    }
-
-    override fun openGallery() {
-        val intent: Intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, OPEN_GALLERY)
     }
 
     override fun progressVisible(boolean: Boolean) {
@@ -193,7 +167,7 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
         grantResults: IntArray
     ) {
         when (requestCode) {
-            100 -> {
+            RequestCode.CAMERA_REQUEST.code -> {
                 if (grantResults.isNotEmpty()
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {

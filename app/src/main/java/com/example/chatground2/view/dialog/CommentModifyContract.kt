@@ -21,9 +21,9 @@ interface CommentModifyContract {
         fun progressVisible(boolean: Boolean)
         fun toastMessage(text:String)
         fun finishActivity()
-        fun openGallery()
         fun setEnable(boolean: Boolean)
         fun setContentText(text: String)
+        fun openGallery()
     }
 
     interface Listener

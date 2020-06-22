@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Owner\\chatground2\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v28\\values-v28.xml",
+            "outputFile": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v28/values-v28.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-1.1.0.aar\\0bd5b5909435621fef41b1b88fca9715\\res\\values-v28\\values-v28.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/values-v28/values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,8",
                         "startColumns": "4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\material-1.1.0.aar\\ea1bc86289095352de4d36280d3a7d5e\\res\\values-v28\\values-v28.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/values-v28/values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

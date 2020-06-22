@@ -28,11 +28,9 @@ interface DetailForumContract {
         fun setCameraImage(path:String?)
         fun deleteCommentImageDialog()
         fun createCommentImageDialog()
-        fun modifyCommentDialog()
         fun progressVisible(boolean: Boolean)
         fun toastMessage(text:String)
         fun finishActivity()
-        fun openGallery()
         fun setDateText(text: String)
         fun setSubjectText(text: String)
         fun setTitleText(text: String)
@@ -43,6 +41,7 @@ interface DetailForumContract {
         fun setRecommendText(text: String)
         fun setRecommendButtonText(text: String)
         fun setRecommendButtonBackground(int:Int)
+        fun setImage(imagePathList: ArrayList<String>?)
         fun setImage0(path: String)
         fun setImage1(path: String)
         fun setImage2(path: String)
@@ -58,6 +57,7 @@ interface DetailForumContract {
         fun deleteForumDialog()
         fun deleteCommentDialog(position:Int)
         fun setEnable(boolean: Boolean)
+        fun openGallery()
     }
 
     interface Listener

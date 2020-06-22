@@ -24,6 +24,8 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
             field?.onClickFunc = { clickForum(it) }
         }
 
+    override fun isSearching():Boolean = isSearch
+
     override fun callForums() {
         view.isLoading(false)
         view.progressVisible(true)
@@ -125,6 +127,4 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
         view.isRefreshing(false)
         view.toastMessage("통신 실패")
     }
-
-    override fun isSearching():Boolean = isSearch
 }

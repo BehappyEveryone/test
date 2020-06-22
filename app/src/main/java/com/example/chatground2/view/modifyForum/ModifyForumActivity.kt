@@ -3,6 +3,7 @@ package com.example.chatground2.view.modifyForum
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,7 +12,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.chatground2.api.IpAddress
-import com.example.chatground2.model.Constants
+import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_modify_forum.*
@@ -23,6 +24,7 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
 
     private var presenter: ModifyForumPresenter? = null
     private var arrayAdapter: ArrayAdapter<CharSequence>? = null
+    private var imageViewList: Array<ImageButton>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,8 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         MF_showImage4.setOnClickListener(this)
         MF_showImage5.setOnClickListener(this)
         backButton.setOnClickListener(this)
+
+        imageViewList = arrayOf(MF_showImage1,MF_showImage2,MF_showImage3,MF_showImage4,MF_showImage5)
     }
 
     override fun onClick(v: View?) {
@@ -92,53 +96,21 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     }
 
     override fun setImage(imagePathList: ArrayList<String>) {
-        when {
-            imagePathList.size == 0 -> {
-                MF_showImage1.visibility = View.INVISIBLE
-                MF_showImage2.visibility = View.INVISIBLE
-                MF_showImage3.visibility = View.INVISIBLE
-                MF_showImage4.visibility = View.INVISIBLE
-                MF_showImage5.visibility = View.INVISIBLE
+        var extra:Int = -1
+        imagePathList.forEachIndexed {index: Int, s: String ->
+            extra = index
+            imageViewList?.get(index)?.let {
+                it.visibility = View.VISIBLE
+                setServerImage(it,s)
             }
-            imagePathList.size == 1 -> {
-                setImage(MF_showImage1, imagePathList[0])
-                MF_showImage2.visibility = View.INVISIBLE
-                MF_showImage3.visibility = View.INVISIBLE
-                MF_showImage4.visibility = View.INVISIBLE
-                MF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 2 -> {
-                setImage(MF_showImage1, imagePathList[0])
-                setImage(MF_showImage2, imagePathList[1])
-                MF_showImage3.visibility = View.INVISIBLE
-                MF_showImage4.visibility = View.INVISIBLE
-                MF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 3 -> {
-                setImage(MF_showImage1, imagePathList[0])
-                setImage(MF_showImage2, imagePathList[1])
-                setImage(MF_showImage3, imagePathList[2])
-                MF_showImage4.visibility = View.INVISIBLE
-                MF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 4 -> {
-                setImage(MF_showImage1, imagePathList[0])
-                setImage(MF_showImage2, imagePathList[1])
-                setImage(MF_showImage3, imagePathList[2])
-                setImage(MF_showImage4, imagePathList[3])
-                MF_showImage5.visibility = View.INVISIBLE
-            }
-            imagePathList.size == 5 -> {
-                setImage(MF_showImage1, imagePathList[0])
-                setImage(MF_showImage2, imagePathList[1])
-                setImage(MF_showImage3, imagePathList[2])
-                setImage(MF_showImage4, imagePathList[3])
-                setImage(MF_showImage5, imagePathList[4])
-            }
+        }
+
+        for(i in extra+1 until 5){
+            imageViewList?.get(i)?.visibility = View.INVISIBLE
         }
     }
 
-    private fun setImage(imageButton: ImageButton, path: String) {
+    private fun setServerImage(imageButton: ImageButton, path: String) {
 
         imageButton.visibility = View.VISIBLE
         if (path.substring(0, 11) == "forumImages") {
@@ -146,12 +118,6 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         } else {
             Picasso.get().load(File(path)).into(imageButton)
         }
-    }
-
-    override fun openGallery() {
-        val intent: Intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, Constants.OPEN_GALLERY)
     }
 
     override fun progressVisible(boolean: Boolean) {
@@ -175,25 +141,6 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     override fun toastMessage(text: String) =
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            100 -> {
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
-                    }
-                    return
-                }
-            }
-        }
-    }
-
     override fun getSelectSubject(): String = MF_subject.selectedItem.toString()
     override fun isTitleEmpty(): Boolean = MF_title.text.isNullOrEmpty()
     override fun isContentEmpty(): Boolean = MF_content.text.isNullOrEmpty()
@@ -208,17 +155,44 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         MF_content.setText(content)
     }
 
+    override fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                Constants.OPEN_GALLERY -> {
+                RequestCode.OPEN_GALLERY.code -> {
                     presenter?.galleryResult(data)
                 }
             }
         } else {
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        toastMessage("권한이 거부되었습니다.")
+                    }
+                    return
+                }
+            }
         }
     }
 

@@ -20,13 +20,13 @@ interface WriteForumContract {
         fun progressVisible(boolean: Boolean)
         fun toastMessage(text:String)
         fun finishActivity()
-        fun openGallery()
         fun isTitleEmpty():Boolean
         fun isContentEmpty():Boolean
         fun getTitleText():String
         fun getContentText():String
         fun getSelectSubject():String
         fun setEnable(boolean: Boolean)
+        fun openGallery()
     }
 
     interface Listener

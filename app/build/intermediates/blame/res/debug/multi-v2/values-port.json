@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Owner\\chatground2\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
+            "outputFile": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-1.1.0.aar\\0bd5b5909435621fef41b1b88fca9715\\res\\values-port\\values-port.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/values-port/values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

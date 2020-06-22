@@ -14,8 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.chatground2.model.Constants.DETAIL_FORUM
-import com.example.chatground2.model.Constants.WRITE_FORUM
+import com.example.chatground2.model.RequestCode.DETAIL_FORUM
+import com.example.chatground2.model.RequestCode.WRITE_FORUM
 import com.example.chatground2.R
 import com.example.chatground2.adapter.ForumsAdapter
 import com.example.chatground2.view.detailForum.DetailForumActivity
@@ -172,7 +172,7 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
     }
 
     override fun enterWriteForum() {
-        startActivityForResult(Intent(context, WriteForumActivity::class.java), WRITE_FORUM)
+        startActivityForResult(Intent(context, WriteForumActivity::class.java), WRITE_FORUM.code)
     }
 
     override fun enterDetailForum(idx: Int?) {
@@ -181,7 +181,7 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
                 Intent(context, DetailForumActivity::class.java).putExtra(
                     "idx",
                     it
-                ), DETAIL_FORUM
+                ), DETAIL_FORUM.code
             )
         }
     }
@@ -199,10 +199,10 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                WRITE_FORUM -> {
+                WRITE_FORUM.code -> {
                     presenter?.refresh()
                 }
-                DETAIL_FORUM -> {
+                DETAIL_FORUM.code -> {
                     presenter?.refresh()
                 }
             }

@@ -27,10 +27,10 @@ interface ProfileContract {
         fun toastMessage(text:String)
         fun progressVisible(boolean: Boolean)
         fun logoutDialog()
-        fun openGallery()
         fun imageDialog()
         fun getIntroduce():String
         fun setEnable(boolean: Boolean)
+        fun openGallery()
     }
 
     interface Listener

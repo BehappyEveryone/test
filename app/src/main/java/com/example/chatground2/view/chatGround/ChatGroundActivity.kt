@@ -2,6 +2,7 @@ package com.example.chatground2.view.chatGround
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,8 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatground2.R
 import com.example.chatground2.adapter.ChatAdapter
 import com.example.chatground2.adapter.ChatUserAdapter
-import com.example.chatground2.model.Constants.OPEN_GALLERY
-import com.example.chatground2.model.Constants.OPEN_VIDEO
+import com.example.chatground2.model.RequestCode
+import com.example.chatground2.model.RequestCode.OPEN_GALLERY
+import com.example.chatground2.model.RequestCode.OPEN_VIDEO
 import kotlinx.android.synthetic.main.activity_chat_ground.*
 import kotlinx.android.synthetic.main.menu_chat_drawer.*
 
@@ -198,7 +200,7 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
         val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
-        startActivityForResult(intent, OPEN_GALLERY)
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
     }
 
     override fun openVideo() {
@@ -206,7 +208,7 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
         val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "video/*"
-        startActivityForResult(intent, OPEN_VIDEO)
+        startActivityForResult(intent, RequestCode.OPEN_VIDEO.code)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -214,15 +216,34 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                OPEN_GALLERY -> {
+                OPEN_GALLERY.code -> {
                     presenter?.imageGalleryResult(data)
                 }
-                OPEN_VIDEO -> {
+                OPEN_VIDEO.code -> {
                     presenter?.videoGalleryResult(data)
                 }
             }
         } else {
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        toastMessage("권한이 거부되었습니다.")
+                    }
+                    return
+                }
+            }
         }
     }
 }

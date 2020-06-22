@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Owner\\chatground2\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-small-v4\\values-small-v4.xml",
+            "outputFile": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-small-v4/values-small-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-1\\files-1.1\\material-1.1.0.aar\\ea1bc86289095352de4d36280d3a7d5e\\res\\values-small-v4\\values-small-v4.xml",
+                    "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/values-small-v4/values-small-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

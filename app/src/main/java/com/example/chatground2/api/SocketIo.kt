@@ -6,4 +6,6 @@ import io.socket.client.Socket
 object SocketIo {
     val opts = IO.Options()
     val mSocket: Socket = IO.socket(IpAddress.BaseURL, opts)
+    var room:String? = null
+    var opinion:String = "neutrality"
 }

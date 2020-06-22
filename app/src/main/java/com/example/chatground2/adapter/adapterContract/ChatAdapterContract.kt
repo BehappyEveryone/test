@@ -4,7 +4,7 @@ import com.example.chatground2.model.dto.ChatDto
 
 interface ChatAdapterContract {
     interface View {
-        var onClickFunc : ((Int) -> Unit)?//1급객체
+        var onVideoClickFunc:((Int) -> Unit)?
         fun notifyAdapter()
     }
 

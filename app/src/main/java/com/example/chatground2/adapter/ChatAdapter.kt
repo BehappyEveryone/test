@@ -1,26 +1,19 @@
 package com.example.chatground2.adapter
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.R
+import com.example.chatground2.`class`.Shared
 import com.example.chatground2.adapter.adapterContract.ChatAdapterContract
 import com.example.chatground2.adapter.holder.*
-import com.example.chatground2.model.Constants
 import com.example.chatground2.model.dto.ChatDto
-import com.example.chatground2.model.dto.UserDto
-import com.google.gson.Gson
 
 class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ChatAdapterContract.Model, ChatAdapterContract.View {
 
-    private val sp: SharedPreferences =
-        context.getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    private val gson = Gson()
-
-    override var onClickFunc: ((Int) -> Unit)? = null
+    override var onVideoClickFunc:((Int) -> Unit)? = null
 
     override fun getItem(position: Int): ChatDto = items[position]
 
@@ -28,32 +21,34 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     val items: ArrayList<ChatDto> = ArrayList()
 
+    private var shared: Shared = Shared(context)
+
     override fun getItemViewType(position: Int): Int {
         return when (items[position].type) {
             "system" -> 0
             "text" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     1//right
                 } else {
                     2//left
                 }
             }
             "strategic" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     3//right
                 } else {
                     4//left
                 }
             }
             "image" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     5//right
                 } else {
                     6//left
                 }
             }
             "video" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     7//right
                 } else {
                     8//left
@@ -103,12 +98,12 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
             7 -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_chat_video_right, parent, false)
-                ChatVideoRightViewHolder(context, view)
+                ChatVideoRightViewHolder(context, view,onVideoClickFunc)
             }
             8 -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_chat_video_left, parent, false)
-                ChatVideoLeftViewHolder(context, view)
+                ChatVideoLeftViewHolder(context, view,onVideoClickFunc)
             }
             else -> throw RuntimeException("알 수 없는 뷰 타입 에러")
         }
@@ -121,7 +116,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                 holder.onBind(items, position)
             }
             "text" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatTextRightViewHolder)
                     holder.onBind(items, position)
                 } else {
@@ -130,7 +125,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                 }
             }
             "strategic" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatStrategicRightViewHolder)
                     holder.onBind(items, position)
                 } else {
@@ -139,7 +134,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                 }
             }
             "image" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatImageRightViewHolder)
                     holder.onBind(items, position)
                 } else {
@@ -148,7 +143,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                 }
             }
             "video" -> {
-                if (items[position].user?._id == getUser()._id) {
+                if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatVideoRightViewHolder)
                     holder.onBind(items, position)
                 } else {
@@ -175,10 +170,5 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     override fun clearItems() {
         items.clear()
-    }
-
-    private fun getUser(): UserDto {
-        val json = sp.getString("User", "")
-        return gson.fromJson(json, UserDto::class.java)
     }
 }

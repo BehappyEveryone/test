@@ -5,22 +5,27 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.chatground2.model.Constants
+import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.example.chatground2.adapter.CommentsAdapter
+import com.example.chatground2.api.IpAddress
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_forum.*
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_camera
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_deleteButton
+import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.activity_write_forum.backButton
+import java.io.File
 
 class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForumView,
     View.OnClickListener {
@@ -28,6 +33,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
     private var presenter: DetailForumPresenter? = null
     private var commentsAdapter: CommentsAdapter? = null
     private var lm: LinearLayoutManager? = null
+    private var imageViewList: Array<ImageView>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +64,8 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         DF_commentSend.setOnClickListener(this)
         DF_modifyButton.setOnClickListener(this)
         DF_recommend.setOnClickListener(this)
+
+        imageViewList = arrayOf(DF_image0,DF_image1,DF_image2,DF_image3,DF_image4)
     }
 
     override fun onDestroy() {
@@ -120,6 +128,31 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         DF_recommend.background = ContextCompat.getDrawable(this,int)
     }
 
+    override fun setImage(imagePathList: ArrayList<String>?) {
+        var extra:Int = -1
+        imagePathList?.forEachIndexed {index: Int, s: String ->
+            extra = index
+            imageViewList?.get(index)?.let {
+                it.visibility = View.VISIBLE
+                setServerImage(it,s)
+            }
+        }
+
+        for(i in extra+1 until 5){
+            imageViewList?.get(i)?.visibility = View.GONE
+        }
+    }
+
+    private fun setServerImage(imageView: ImageView, path: String) {
+
+        imageView.visibility = View.VISIBLE
+        if (path.substring(0, 11) == "forumImages") {
+            Picasso.get().load(IpAddress.BaseURL + path).into(imageView)
+        } else {
+            Picasso.get().load(File(path)).into(imageView)
+        }
+    }
+
     override fun setImage0(path: String) {
         DF_image0.visibility = View.VISIBLE
         Picasso.get().load(path).into(DF_image0)
@@ -153,12 +186,6 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         }
     }
 
-    override fun openGallery() {
-        val intent: Intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, Constants.OPEN_GALLERY)
-    }
-
     override fun createCommentImageDialog() {
         val items = arrayOf("이미지")
         val dialog =
@@ -174,23 +201,6 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
             .show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                Constants.OPEN_GALLERY -> {
-                    presenter?.galleryResult(data)
-                }
-                Constants.MODIFY_FORUM -> {
-                    presenter?.detailForum()
-                }
-            }
-        } else {
-            toastMessage("취소 되었습니다.")
-        }
-    }
-
     override fun setCameraImage(path: String?) {
         if (path.isNullOrEmpty()) {
             DF_camera.setImageDrawable(
@@ -199,10 +209,8 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
                     R.drawable.write_forum_camera_icon
                 )
             )
-//            Picasso.get().load(R.drawable.write_forum_camera_icon).fit().into(DF_camera)
         } else {
             setImageBitmap(DF_camera, path)
-//            Picasso.get().load(path).into(DF_camera)
         }
     }
 
@@ -240,34 +248,12 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         builder.show()
     }
 
-    override fun modifyCommentDialog() {
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            100 -> {
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
-                    }
-                    return
-                }
-            }
-        }
-    }
-
     override fun enterModifyForum(intent: Intent) {
-        startActivityForResult(intent, Constants.MODIFY_FORUM)
+        startActivityForResult(intent, RequestCode.MODIFY_FORUM.code)
     }
 
     override fun enterModifyComment(intent: Intent) {
-        startActivityForResult(intent, Constants.MODIFY_COMMENT)
+        startActivityForResult(intent, RequestCode.MODIFY_COMMENT.code)
     }
 
     override fun onBackPressed() {
@@ -328,5 +314,49 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         DF_modifyButton.isEnabled = boolean
         DF_recommend.isEnabled = boolean
         backButton.isEnabled = boolean
+    }
+
+    override fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                RequestCode.OPEN_GALLERY.code -> {
+                    presenter?.galleryResult(data)
+                }
+                RequestCode.MODIFY_FORUM.code -> {
+                    presenter?.detailForum()
+                }
+            }
+        } else {
+            toastMessage("취소 되었습니다.")
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        toastMessage("권한이 거부되었습니다.")
+                    }
+                    return
+                }
+            }
+        }
     }
 }

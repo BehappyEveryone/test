@@ -7,9 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.R
-import com.example.chatground2.model.Constants
+import com.example.chatground2.model.RequestCode
 import com.example.chatground2.model.dto.ChatDto
-import com.example.chatground2.model.dto.UserDto
 import com.google.gson.Gson
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -21,10 +20,6 @@ class ChatTextLeftViewHolder(
     val context: Context,
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
-
-    private val sp: SharedPreferences =
-        context.getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    private val gson = Gson()
 
     private val ctlContent = itemView.CTL_content
     private val ctlDate = itemView.CTL_date
@@ -51,10 +46,5 @@ class ChatTextLeftViewHolder(
                     })
             }
         }
-    }
-
-    private fun getUser(): UserDto {
-        val json = sp.getString("User", "")
-        return gson.fromJson(json, UserDto::class.java)
     }
 }

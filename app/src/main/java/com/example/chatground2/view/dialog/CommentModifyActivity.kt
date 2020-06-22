@@ -3,6 +3,8 @@ package com.example.chatground2.view.dialog
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -10,7 +12,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.chatground2.api.IpAddress
-import com.example.chatground2.model.Constants
+import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_comment_modify.*
@@ -121,23 +123,44 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
         }
     }
 
+    override fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        toastMessage("권한이 거부되었습니다.")
+                    }
+                    return
+                }
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                Constants.OPEN_GALLERY -> {
+                RequestCode.OPEN_GALLERY.code -> {
                     presenter?.galleryResult(data)
                 }
             }
         } else {
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
         }
-    }
-
-    override fun openGallery() {
-        val intent: Intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, Constants.OPEN_GALLERY)
     }
 }

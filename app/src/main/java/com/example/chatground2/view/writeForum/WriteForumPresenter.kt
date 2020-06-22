@@ -1,20 +1,12 @@
 package com.example.chatground2.view.writeForum
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.chatground2.model.Constants.SHARED_PREFERENCE
+import com.example.chatground2.`class`.Gallery
+import com.example.chatground2.`class`.Shared
+import com.example.chatground2.`class`.Permission
 import com.example.chatground2.model.dao.Model
-import com.example.chatground2.model.dto.UserDto
-import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,12 +19,9 @@ class WriteForumPresenter(
 ) : WriteForumContract.IWriteForumPresenter, WriteForumContract.Listener {
 
     private var model: Model = Model(context)
-
-    private val sp: SharedPreferences =
-        context.getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    private val gson = Gson()
-
-    private var c:Cursor? = null
+    private var permission:Permission = Permission(context)
+    private var shared:Shared = Shared(context)
+    private var gallery:Gallery = Gallery(context)
 
     private var imagePathList: ArrayList<String> = ArrayList()
 
@@ -59,38 +48,24 @@ class WriteForumPresenter(
         view.setImage(imagePathList)
     }
 
-    override fun closeCursor() {
-        if(c != null)
-        {
-            c?.close()
-        }
-    }
-
     override fun checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        )//
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as Activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-            ) {//이전에 이미 권한이 거부되었을 때 설명
-                view.toastMessage("권한을 허가해주십시오.")
-                setupPermissions()
-            } else {//최초로 권한 요청
-                makeRequest()
+        when(permission.checkCameraPermission()){
+            0 -> {//권한을 이미 허용
+                view.openGallery()
             }
-        } else {
-            view.openGallery()
+            1-> {//이전에 이미 권한이 거부됨
+                view.toastMessage("권한을 허가해주십시오.")
+                permission.setupPermissions()
+            }
+            3-> {//최초로 권한 요청
+                permission.makeRequest()
+            }
         }
     }
 
     override fun galleryResult(data: Intent?) {
         val currentImageUrl: Uri? = data?.data
-        val path = getPath(currentImageUrl!!)
+        val path = gallery.getPath(currentImageUrl!!)
         if (!path.isNullOrEmpty()) {
             imagePathList.add(path)
         }
@@ -102,7 +77,7 @@ class WriteForumPresenter(
             view.setEnable(false)
             view.progressVisible(true)
             val hashMap = HashMap<String, RequestBody>()
-            hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"),getUser()._id)
+            hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"),shared.getUser()._id)
             hashMap["subject"] = RequestBody.create(MediaType.parse("text/plain"),view.getSelectSubject())
             hashMap["title"] = RequestBody.create(MediaType.parse("text/plain"),view.getTitleText())
             hashMap["content"] = RequestBody.create(MediaType.parse("text/plain"),view.getContentText())
@@ -127,6 +102,10 @@ class WriteForumPresenter(
         }
     }
 
+    override fun closeCursor() {
+        gallery.closeCursor()
+    }
+
     override fun onSuccess() {
         view.progressVisible(false)
         view.toastMessage("생성 완료")
@@ -144,38 +123,5 @@ class WriteForumPresenter(
         view.progressVisible(false)
         view.toastMessage("통신 실패")
         view.setEnable(true)
-    }
-
-    private fun getUser(): UserDto {
-        val json = sp.getString("User", "")
-        return gson.fromJson(json, UserDto::class.java)
-    }
-
-    private fun getPath(uri: Uri): String? {
-        val pro: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-        c = context.contentResolver.query(uri, pro, null, null, null)
-        val index = c?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        c?.moveToFirst()
-        return index?.let { c?.getString(it) }
-    }
-
-    private fun setupPermissions() {
-        //스토리지 읽기 퍼미션을 permission 변수에 담는다
-        val permission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            makeRequest()
-        }
-    }
-
-    private fun makeRequest() {
-        ActivityCompat.requestPermissions(
-            context as Activity,
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            100
-        )
     }
 }

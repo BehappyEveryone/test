@@ -1,15 +1,12 @@
 package com.example.chatground2.adapter.holder
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.api.IpAddress
-import com.example.chatground2.model.Constants
 import com.example.chatground2.model.dto.CommentDto
-import com.example.chatground2.model.dto.UserDto
 import com.example.chatground2.R
-import com.google.gson.Gson
+import com.example.chatground2.`class`.Shared
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_reply.view.*
@@ -21,10 +18,6 @@ class ReplyViewHolder (
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-    private val sp: SharedPreferences =
-        context.getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    private val gson = Gson()
-
     private val content = itemView.RI_content
     private val date = itemView.RI_date
     private val nickname = itemView.RI_nickname
@@ -32,13 +25,14 @@ class ReplyViewHolder (
     private val profile = itemView.RI_profile
     private val modifyButton = itemView.RI_modifyButton
     private val deleteButton = itemView.RI_deleteButton
+    private var shared: Shared = Shared(context)
 
     fun onBind(
         items: ArrayList<CommentDto>,
         position: Int
     ) {
         items[position].let {
-            if(it.user._id == getUser()._id)
+            if(it.user._id == shared.getUser()._id)
             {
                 modifyButton.visibility = View.VISIBLE
                 deleteButton.visibility = View.VISIBLE
@@ -79,10 +73,5 @@ class ReplyViewHolder (
                     })
             }
         }
-    }
-
-    private fun getUser(): UserDto {
-        val json = sp.getString("User", "")
-        return gson.fromJson(json, UserDto::class.java)
     }
 }

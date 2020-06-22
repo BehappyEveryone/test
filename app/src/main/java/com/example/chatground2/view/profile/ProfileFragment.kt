@@ -2,9 +2,9 @@ package com.example.chatground2.view.profile
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,18 +12,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.R
-import com.example.chatground2.adapter.ForumsAdapter
-import com.example.chatground2.model.Constants
-import com.example.chatground2.view.forums.ForumsContract
-import com.example.chatground2.view.forums.ForumsPresenter
+import com.example.chatground2.model.RequestCode
 import com.example.chatground2.view.login.LoginActivity
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_forums.*
-import kotlinx.android.synthetic.main.fragment_forums.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import java.lang.Exception
@@ -152,12 +145,6 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
             ?.show()
     }
 
-    override fun openGallery() {
-        val intent: Intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, Constants.OPEN_GALLERY)
-    }
-
     override fun setNickname(text: String) {
         P_nickname.text = text
     }
@@ -187,17 +174,46 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
         activity?.finish()
     }
 
+    override fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                Constants.OPEN_GALLERY -> {
+                RequestCode.OPEN_GALLERY.code -> {
                     presenter?.galleryResult(data)
+                    println("이미지3")
                 }
             }
+            println("이미지4")
         } else {
             Toast.makeText(context, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        toastMessage("권한이 거부되었습니다.")
+                    }
+                    return
+                }
+            }
         }
     }
 }

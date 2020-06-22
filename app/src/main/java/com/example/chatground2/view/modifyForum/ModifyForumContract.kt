@@ -22,7 +22,6 @@ interface ModifyForumContract {
         fun progressVisible(boolean: Boolean)
         fun toastMessage(text:String)
         fun finishActivity()
-        fun openGallery()
         fun isTitleEmpty():Boolean
         fun isContentEmpty():Boolean
         fun getTitleText():String
@@ -30,6 +29,7 @@ interface ModifyForumContract {
         fun getSelectSubject():String
         fun setEnable(boolean: Boolean)
         fun setDefault(subject: String,title:String,content:String)
+        fun openGallery()
     }
 
     interface Listener
