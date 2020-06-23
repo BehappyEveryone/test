@@ -189,10 +189,8 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
             when (requestCode) {
                 RequestCode.OPEN_GALLERY.code -> {
                     presenter?.galleryResult(data)
-                    println("이미지3")
                 }
             }
-            println("이미지4")
         } else {
             Toast.makeText(context, "취소 되었습니다.", Toast.LENGTH_LONG).show();
         }

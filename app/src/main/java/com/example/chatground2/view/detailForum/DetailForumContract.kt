@@ -1,8 +1,13 @@
 package com.example.chatground2.view.detailForum
 
 import android.content.Intent
+import android.view.View
+import android.widget.ImageView
 import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.adapter.adapterContract.CommentsAdapterContract
+import com.example.chatground2.api.IpAddress
+import com.squareup.picasso.Picasso
+import java.io.File
 
 interface DetailForumContract {
     interface IDetailForumPresenter{
@@ -22,6 +27,7 @@ interface DetailForumContract {
         fun onRecommendClick()
         fun recommendForum()
         fun deleteComment(position: Int)
+        fun setServerImage(imageView: ImageView, path: String)
     }
 
     interface IDetailForumView{
@@ -42,11 +48,6 @@ interface DetailForumContract {
         fun setRecommendButtonText(text: String)
         fun setRecommendButtonBackground(int:Int)
         fun setImage(imagePathList: ArrayList<String>?)
-        fun setImage0(path: String)
-        fun setImage1(path: String)
-        fun setImage2(path: String)
-        fun setImage3(path: String)
-        fun setImage4(path: String)
         fun setDeleteForumVisible(boolean: Boolean)
         fun setModifyForumVisible(boolean: Boolean)
         fun enterModifyForum(intent: Intent)

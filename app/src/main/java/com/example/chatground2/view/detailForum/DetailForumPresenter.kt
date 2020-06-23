@@ -3,6 +3,8 @@ package com.example.chatground2.view.detailForum
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.view.View
+import android.widget.ImageView
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.R
 import com.example.chatground2.`class`.Gallery
@@ -21,6 +23,7 @@ import okhttp3.RequestBody
 import java.io.File
 import java.text.DateFormat
 import com.google.gson.reflect.TypeToken
+import com.squareup.picasso.Picasso
 
 
 class DetailForumPresenter(
@@ -177,6 +180,16 @@ class DetailForumPresenter(
         view.setEnable(false)
         adapterModel?.let {
             model.deleteComment(idx.toString(), it.getItem(position)._id, this)
+        }
+    }
+
+    override fun setServerImage(imageView: ImageView, path: String) {
+
+        imageView.visibility = View.VISIBLE
+        if (path.substring(0, 11) == "forumImages") {
+            Picasso.get().load(IpAddress.BaseURL + path).into(imageView)
+        } else {
+            Picasso.get().load(File(path)).into(imageView)
         }
     }
 

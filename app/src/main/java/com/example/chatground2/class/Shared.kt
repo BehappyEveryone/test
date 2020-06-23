@@ -25,7 +25,6 @@ class Shared(val context: Context) {
     fun getAutoEmail(): String? = sp.getString("AutoEmail", null)
     fun getAutoPassword(): String? = sp.getString("AutoPassword", null)
 
-
     fun setSharedPreference(name: String, value: Any?) {
         when (value) {
             is String, is String? -> {

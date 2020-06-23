@@ -15,6 +15,7 @@ import com.example.chatground2.api.SocketIo
 import com.example.chatground2.model.dto.ChatDto
 import com.example.chatground2.model.dto.ChatUserDto
 import com.example.chatground2.service.SocketService
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -32,6 +33,7 @@ class ChatGroundPresenter(
     private var permission: Permission = Permission(context)
     private var shared: Shared = Shared(context)
     private var gallery: Gallery = Gallery(context)
+    private var gson:Gson = Gson()
 
     private var socketService: SocketService? = null
     private val intentFilter: IntentFilter = IntentFilter()
@@ -89,15 +91,15 @@ class ChatGroundPresenter(
 
     override fun getMessages() {
         val arrayList = ArrayList<ChatDto>()
-        val jsonArray = shared.getMessage()
-        if (jsonArray != null) {
-            for (element in jsonArray) {
-                arrayList.add(shared.gsonFromJson(element.toString(), ChatDto::class.java))
+        if (shared.getMessage() != null) {
+            val jsonArray = JSONArray(shared.getMessage())
+            for (i in 0 until jsonArray.length()) {
+                arrayList.add(gson.fromJson(jsonArray[i].toString(), ChatDto::class.java))
             }
+            adapterChatModel?.addItems(arrayList)
+            adapterChatView?.notifyAdapter()
+            adapterChatModel?.getItemSize()?.let { view.setChatScrollPosition(it - 1) }
         }
-        adapterChatModel?.addItems(arrayList)
-        adapterChatView?.notifyAdapter()
-        adapterChatModel?.getItemSize()?.let { view.setChatScrollPosition(it - 1) }
     }
 
     override fun removeMessages() {
@@ -189,204 +191,202 @@ class ChatGroundPresenter(
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == "onMessage") {
-                adapterChatModel?.addItem(
-                    shared.gsonFromJson(
-                        intent.getStringExtra("onMessageValue"),
-                        ChatDto::class.java
+            when (intent?.action) {
+                "onMessage" -> {
+                    adapterChatModel?.addItem(
+                        shared.gsonFromJson(
+                            intent.getStringExtra("onMessageValue"),
+                            ChatDto::class.java
+                        )
                     )
-                )
-                adapterChatView?.notifyAdapter()
-                adapterChatModel?.getItemSize()?.let { view.setChatScrollPosition(it - 1) }
-            }
-
-            if (intent?.action == "onRoomInfoChange") {
-                val json = JSONObject(intent.getStringExtra("onRoomInfoChangeValue"))
-                println("json : $json")
-                val users = json.getJSONObject("roomInfo").getJSONArray("users")
-
-                val arrayList = ArrayList<ChatUserDto>()
-                for (i in 0 until users.length()) {
-                    val user = shared.gsonFromJson(users[i].toString(), ChatUserDto::class.java)
-                    if (user._id == shared.getUser()._id) {
-                        SocketIo.opinion = user.opinion.toString()
-                    }
-                    arrayList.add(user)
+                    adapterChatView?.notifyAdapter()
+                    adapterChatModel?.getItemSize()?.let { view.setChatScrollPosition(it - 1) }
                 }
-                adapterChatUserModel?.clearItems()
-                adapterChatUserModel?.addItems(arrayList)
-                adapterChatUserView?.notifyAdapter()
-            }
+                "onRoomInfoChange" -> {
+                    val json = JSONObject(intent.getStringExtra("onRoomInfoChangeValue"))
+                    println("json : $json")
+                    val users = json.getJSONObject("roomInfo").getJSONArray("users")
 
-            if (intent?.action == "onOfferSubject") {
-                val json = JSONObject(intent.getStringExtra("onOfferSubjectValue"))
-                val subject = json.get("subject").toString()
-                val time = json.get("time").toString()
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    view.setEnable(false)
-
-                    for (i: Int in 0..subject.length) {
-                        view.setSubjectText(subject.substring(0, i))
-                        delay(100)
+                    val arrayList = ArrayList<ChatUserDto>()
+                    for (i in 0 until users.length()) {
+                        val user = shared.gsonFromJson(users[i].toString(), ChatUserDto::class.java)
+                        if (user._id == shared.getUser()._id) {
+                            SocketIo.opinion = user.opinion.toString()
+                        }
+                        arrayList.add(user)
                     }
+                    adapterChatUserModel?.clearItems()
+                    adapterChatUserModel?.addItems(arrayList)
+                    adapterChatUserView?.notifyAdapter()
+                }
+                "onOfferSubject" -> {
+                    val json = JSONObject(intent.getStringExtra("onOfferSubjectValue"))
+                    val subject = json.get("subject").toString()
+                    val time = json.get("time").toString()
 
-                    view.setOpinionVisible(true)
-                    for (i: Int in time.toInt() / 1000 downTo 0) {
-                        if (i == 0) {
-                            view.setOpinionVisible(false)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        view.setEnable(false)
 
-                            val opinion: String = when {
-                                view.getAgreeButtonSelected() -> "agree"
-                                view.getOpposeButtonSelected() -> "oppose"
-                                else -> "neutrality"
+                        for (i: Int in 0..subject.length) {
+                            view.setSubjectText(subject.substring(0, i))
+                            delay(100)
+                        }
+
+                        view.setOpinionVisible(true)
+                        for (i: Int in time.toInt() / 1000 downTo 0) {
+                            if (i == 0) {
+                                view.setOpinionVisible(false)
+
+                                val opinion: String = when {
+                                    view.getAgreeButtonSelected() -> "agree"
+                                    view.getOpposeButtonSelected() -> "oppose"
+                                    else -> "neutrality"
+                                }
+
+                                val data: JSONObject =
+                                    JSONObject().put("user", shared.getUser()._id)
+                                        .put("room", SocketIo.room)
+                                        .put("opinion", opinion)
+                                socketService?.socketEmit("opinionResult", data)
+                                SocketIo.opinion = opinion
+                                view.setAgreeButtonSelected(false)
+                                view.setOpposeButtonSelected(false)
                             }
-
-                            val data: JSONObject =
-                                JSONObject().put("user", shared.getUser()._id)
-                                    .put("room", SocketIo.room)
-                                    .put("opinion", opinion)
-                            socketService?.socketEmit("opinionResult", data)
-                            SocketIo.opinion = opinion
-                            view.setAgreeButtonSelected(false)
-                            view.setOpposeButtonSelected(false)
+                            if (i < 10) {
+                                view.setTimeText("00:0$i")
+                            } else {
+                                view.setTimeText("00:$i")
+                            }
+                            delay(1000)//1000
                         }
-                        if (i < 10) {
-                            view.setTimeText("00:0$i")
-                        } else {
-                            view.setTimeText("00:$i")
-                        }
-                        delay(1000)//1000
                     }
                 }
-            }
+                "onPresentationOrder" -> {
+                    val json = JSONObject(intent.getStringExtra("onPresentationOrderValue"))
+                    val time = json.get("time").toString()
+                    val order = json.get("order").toString()
+                    val speaking = json.get("speaking")
 
-            if (intent?.action == "onPresentationOrder") {
-                val json = JSONObject(intent.getStringExtra("onPresentationOrderValue"))
-                val time = json.get("time").toString()
-                val order = json.get("order").toString()
-                val speaking = json.get("speaking")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (order == "strategicTimeComplete" || order == "strategicTimeComplete2") {
+                            strategic = true
+                        }
+                        when (speaking) {
+                            "all" -> {
+                                view.setEnable(true)
+                            }
+                            "agree" -> {
+                                if (SocketIo.opinion == "agree") {
+                                    view.setEnable(true)
+                                } else {
+                                    view.setEnable(false)
+                                }
+                            }
+                            "oppose" -> {
+                                if (SocketIo.opinion == "oppose") {
+                                    view.setEnable(true)
+                                } else {
+                                    view.setEnable(false)
+                                }
+                            }
+                        }
 
-                CoroutineScope(Dispatchers.Main).launch {
-                    if (order == "strategicTimeComplete" || order == "strategicTimeComplete2") {
-                        strategic = true
+                        for (i: Int in time.toInt() / 1000 downTo 0) {
+                            val sec: Int = i % 60
+                            val min: Int = i / 60
+                            when {
+                                min == 0 && sec == 0 -> {
+                                    view.setEnable(false)
+                                    view.setTimeText("00:00")
+                                    if (strategic) {
+                                        strategic = false
+                                    }
+
+                                    val data: JSONObject = JSONObject().put("room", SocketIo.room)
+                                        .put("user", shared.getUser()._id)
+                                    socketService?.socketEmit(order, data)
+                                }
+                                min == 0 -> when {
+                                    sec < 10 -> view.setTimeText("00:0$sec")
+                                    else -> view.setTimeText("00:$sec")
+                                }
+                                min < 10 -> when {
+                                    sec < 10 -> view.setTimeText("0$min:0$sec")
+                                    else -> view.setTimeText("0$min:$sec")
+                                }
+                                else -> when {
+                                    sec < 10 -> view.setTimeText("$min:0$sec")
+                                    else -> view.setTimeText("$min:$sec")
+                                }
+                            }
+                            delay(1000)
+                        }
                     }
-                    when (speaking) {
-                        "all" -> {
-                            view.setEnable(true)
+                }
+                "reVoting" -> {
+                    val json = JSONObject(intent.getStringExtra("reVotingValue"))
+                    val time = json.get("time").toString()
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        view.setEnable(false)
+
+                        view.setOpinionVisible(true)
+                        for (i: Int in time.toInt() / 1000 downTo 0) {
+                            if (i == 0) {
+                                view.setOpinionVisible(false)
+
+                                val reVote: String = when {
+                                    view.getAgreeButtonSelected() -> "agree"
+                                    view.getOpposeButtonSelected() -> "oppose"
+                                    else -> "neutrality"
+                                }
+
+                                val data: JSONObject =
+                                    JSONObject().put("user", shared.getUser()._id)
+                                        .put("room", SocketIo.room)
+                                        .put("reVote", reVote)
+                                socketService?.socketEmit("reVoteResult", data)
+                                view.setAgreeButtonSelected(false)
+                                view.setOpposeButtonSelected(false)
+                            }
+                            if (i < 10) {
+                                view.setTimeText("00:0$i")
+                            } else {
+                                view.setTimeText("00:$i")
+                            }
+                            delay(1000)//1000
+                        }
+                    }
+                }
+
+                "result" -> {
+                    val json = JSONObject(intent.getStringExtra("resultValue"))
+
+                    when (json.get("winner").toString()) {
+                        "neutrality" -> {
+                            view.setResultText("DRAW")
                         }
                         "agree" -> {
                             if (SocketIo.opinion == "agree") {
-                                view.setEnable(true)
+                                view.setResultText("WIN")
                             } else {
-                                view.setEnable(false)
+                                view.setResultText("LOSE")
                             }
                         }
                         "oppose" -> {
                             if (SocketIo.opinion == "oppose") {
-                                view.setEnable(true)
+                                view.setResultText("WIN")
                             } else {
-                                view.setEnable(false)
+                                view.setResultText("LOSE")
                             }
                         }
                     }
 
-                    for (i: Int in time.toInt() / 1000 downTo 0) {
-                        val sec: Int = i % 60
-                        val min: Int = i / 60
-                        when {
-                            min == 0 && sec == 0 -> {
-                                view.setEnable(false)
-                                view.setTimeText("00:00")
-                                if (strategic) {
-                                    strategic = false
-                                }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(5000)
 
-                                val data: JSONObject = JSONObject().put("room", SocketIo.room)
-                                    .put("user", shared.getUser()._id)
-                                socketService?.socketEmit(order, data)
-                            }
-                            min == 0 -> when {
-                                sec < 10 -> view.setTimeText("00:0$sec")
-                                else -> view.setTimeText("00:$sec")
-                            }
-                            min < 10 -> when {
-                                sec < 10 -> view.setTimeText("0$min:0$sec")
-                                else -> view.setTimeText("0$min:$sec")
-                            }
-                            else -> when {
-                                sec < 10 -> view.setTimeText("$min:0$sec")
-                                else -> view.setTimeText("$min:$sec")
-                            }
-                        }
-                        delay(1000)
+                        reset()
                     }
-                }
-            }
-
-            if (intent?.action == "reVoting") {
-                val json = JSONObject(intent.getStringExtra("reVotingValue"))
-                val time = json.get("time").toString()
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    view.setEnable(false)
-
-                    view.setOpinionVisible(true)
-                    for (i: Int in time.toInt() / 1000 downTo 0) {
-                        if (i == 0) {
-                            view.setOpinionVisible(false)
-
-                            val reVote: String = when {
-                                view.getAgreeButtonSelected() -> "agree"
-                                view.getOpposeButtonSelected() -> "oppose"
-                                else -> "neutrality"
-                            }
-
-                            val data: JSONObject =
-                                JSONObject().put("user", shared.getUser()._id)
-                                    .put("room", SocketIo.room)
-                                    .put("reVote", reVote)
-                            socketService?.socketEmit("reVoteResult", data)
-                            view.setAgreeButtonSelected(false)
-                            view.setOpposeButtonSelected(false)
-                        }
-                        if (i < 10) {
-                            view.setTimeText("00:0$i")
-                        } else {
-                            view.setTimeText("00:$i")
-                        }
-                        delay(1000)//1000
-                    }
-                }
-            }
-
-            if (intent?.action == "result") {
-                val json = JSONObject(intent.getStringExtra("resultValue"))
-
-                when (json.get("winner").toString()) {
-                    "neutrality" -> {
-                        view.setResultText("DRAW")
-                    }
-                    "agree" -> {
-                        if (SocketIo.opinion == "agree") {
-                            view.setResultText("WIN")
-                        } else {
-                            view.setResultText("LOSE")
-                        }
-                    }
-                    "oppose" -> {
-                        if (SocketIo.opinion == "oppose") {
-                            view.setResultText("WIN")
-                        } else {
-                            view.setResultText("LOSE")
-                        }
-                    }
-                }
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(5000)
-
-                    reset()
                 }
             }
         }

@@ -100,10 +100,8 @@ class ProfilePresenter(private val context: Context, val view: ProfileContract.I
     }
 
     override fun galleryResult(data: Intent?) {
-        println("이미지")
         val currentImageUrl: Uri? = data?.data
         val path = gallery.getPath(currentImageUrl!!)
-        println("이미지2 : $image")
         image = path
         image?.let { view.setProfileImage("file://$it") }
     }

@@ -119,6 +119,8 @@ class SocketService : Service() {
     private val onMessage = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
+        println("메세지 : " + receivedData["type"])
+
         if(receivedData["type"] == "image"){
             val binaryData = Base64.decode(receivedData["binaryData"].toString(),Base64.DEFAULT)
             val path = makeDirAndSaveFile(binaryData,0)

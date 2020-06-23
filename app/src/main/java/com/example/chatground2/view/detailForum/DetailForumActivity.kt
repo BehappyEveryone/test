@@ -134,48 +134,13 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
             extra = index
             imageViewList?.get(index)?.let {
                 it.visibility = View.VISIBLE
-                setServerImage(it,s)
+                presenter?.setServerImage(it,s)
             }
         }
 
         for(i in extra+1 until 5){
             imageViewList?.get(i)?.visibility = View.GONE
         }
-    }
-
-    private fun setServerImage(imageView: ImageView, path: String) {
-
-        imageView.visibility = View.VISIBLE
-        if (path.substring(0, 11) == "forumImages") {
-            Picasso.get().load(IpAddress.BaseURL + path).into(imageView)
-        } else {
-            Picasso.get().load(File(path)).into(imageView)
-        }
-    }
-
-    override fun setImage0(path: String) {
-        DF_image0.visibility = View.VISIBLE
-        Picasso.get().load(path).into(DF_image0)
-    }
-
-    override fun setImage1(path: String) {
-        DF_image1.visibility = View.VISIBLE
-        Picasso.get().load(path).into(DF_image1)
-    }
-
-    override fun setImage2(path: String) {
-        DF_image2.visibility = View.VISIBLE
-        Picasso.get().load(path).into(DF_image2)
-    }
-
-    override fun setImage3(path: String) {
-        DF_image3.visibility = View.VISIBLE
-        Picasso.get().load(path).into(DF_image3)
-    }
-
-    override fun setImage4(path: String) {
-        DF_image4.visibility = View.VISIBLE
-        Picasso.get().load(path).into(DF_image4)
     }
 
     override fun progressVisible(boolean: Boolean) {
