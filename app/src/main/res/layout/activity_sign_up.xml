@@ -17,8 +17,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="회원가입"
-        android:textSize="20dp"
+        android:text="@string/login_sign_up_text"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
         android:id="@+id/Email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이메일(아이디)"
+        android:text="@string/email_text"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -47,7 +47,7 @@
         android:id="@+id/SU_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="이메일 주소"
+        android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/SU_emailOverlap"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:background="@drawable/button1"
-        android:text="중복확인"
+        android:text="@string/overlap_check_text"
         android:textColor="@color/button1color"
         app:layout_constraintBottom_toBottomOf="@+id/SU_email"
         app:layout_constraintEnd_toStartOf="@+id/SU_emailCheck"
@@ -79,11 +79,11 @@
         app:layout_constraintTop_toTopOf="@+id/SU_emailOverlap" />
 
     <TextView
-        android:id="@+id/password"
+        android:id="@+id/SU_passwordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="비밀번호"
+        android:text="@string/password_text"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/Email"
         app:layout_constraintTop_toBottomOf="@+id/SU_email" />
@@ -94,12 +94,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
-        android:hint="영문+숫자 8~20 이내"
+        android:hint="@string/password_hint"
         android:inputType="textPassword"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/SU_passwordCheck"
         app:layout_constraintStart_toStartOf="@+id/Email"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/SU_passwordText" />
 
     <ImageView
         android:id="@+id/SU_passwordCheck"
@@ -112,11 +112,11 @@
         app:layout_constraintTop_toTopOf="@+id/SU_password" />
 
     <TextView
-        android:id="@+id/passwordok"
+        android:id="@+id/SU_passwordConfirmText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="비밀번호 확인"
+        android:text="@string/password_confirm_text"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/Email"
         app:layout_constraintTop_toBottomOf="@+id/SU_password" />
@@ -126,12 +126,12 @@
         android:id="@+id/SU_passwordConfirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="비밀번호 확인"
+        android:hint="@string/password_confirm_text"
         android:inputType="textPassword"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/SU_password"
         app:layout_constraintStart_toStartOf="@+id/Email"
-        app:layout_constraintTop_toBottomOf="@+id/passwordok" />
+        app:layout_constraintTop_toBottomOf="@+id/SU_passwordConfirmText" />
 
     <ImageView
         android:id="@+id/SU_passwordConfirmCheck"
@@ -144,11 +144,11 @@
         app:layout_constraintTop_toTopOf="@+id/SU_passwordConfirm" />
 
     <TextView
-        android:id="@+id/nickname"
+        android:id="@+id/SU_nicknameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="닉네임"
+        android:text="@string/nickname_text"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/Email"
         app:layout_constraintTop_toBottomOf="@+id/SU_passwordConfirm" />
@@ -158,12 +158,12 @@
         android:id="@+id/SU_nickname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="한글,영문,숫자 4~12 이내"
+        android:hint="@string/nickname_hint"
         android:inputType="text"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/SU_email"
         app:layout_constraintStart_toStartOf="@+id/Email"
-        app:layout_constraintTop_toBottomOf="@+id/nickname" />
+        app:layout_constraintTop_toBottomOf="@+id/SU_nicknameText" />
 
     <Button
         android:id="@+id/SU_nicknameOverlap"
@@ -172,7 +172,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/button1"
-        android:text="중복확인"
+        android:text="@string/overlap_check_text"
         android:textColor="@color/button1color"
         app:layout_constraintBottom_toBottomOf="@+id/SU_nickname"
         app:layout_constraintStart_toEndOf="@id/SU_nickname"
@@ -194,7 +194,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="@drawable/button2"
-        android:text="가입 완료"
+        android:text="@string/sign_up_complete"
         android:layout_marginTop="40dp"
         android:textColor="@color/button2color"
         android:textSize="30sp"

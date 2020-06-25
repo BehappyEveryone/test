@@ -53,12 +53,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginView, View.OnClic
 
     override fun finishActivity() = finish()
 
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
-    override fun getEmailText(): String = L_email.text.toString()
-
-    override fun getPasswordText(): String = L_password.text.toString()
-
     override fun enterMainActivity() = startActivity(Intent(this, MainActivity::class.java))
 
     override fun enterSignUpActivity() = startActivity(Intent(this, SignUpActivity::class.java))
@@ -79,7 +73,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.ILoginView, View.OnClic
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.L_signIn -> presenter?.signInButtonClick()
+            R.id.L_signIn -> presenter?.signInButtonClick(L_email.text.toString(),L_password.text.toString())
             R.id.L_signUp -> presenter?.signUpButtonClick()
         }
     }

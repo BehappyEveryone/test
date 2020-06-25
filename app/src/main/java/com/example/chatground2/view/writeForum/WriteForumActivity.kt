@@ -16,7 +16,9 @@ import androidx.appcompat.app.AlertDialog
 import com.example.chatground2.model.RequestCode.OPEN_GALLERY
 import com.example.chatground2.R
 import com.example.chatground2.model.RequestCode
+import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.activity_write_forum.*
+import kotlinx.android.synthetic.main.activity_write_forum.backButton
 
 class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumView,
     View.OnClickListener {
@@ -56,7 +58,13 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.WF_saveButton -> presenter?.saveClick()
+            R.id.WF_saveButton -> presenter?.saveClick(
+                WF_title.text.isNullOrEmpty(),
+                WF_content.text.isNullOrEmpty(),
+                WF_subject.selectedItem.toString(),
+                WF_title.text.toString(),
+                WF_content.text.toString()
+            )
             R.id.WF_cameraButton -> presenter?.cameraClick()
             R.id.WF_showImage1 -> presenter?.showImageClick(1)
             R.id.WF_showImage2 -> presenter?.showImageClick(2)
@@ -76,7 +84,7 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
     override fun createShowImageDialog(imageNum: Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("이미지를 지우시겠습니까?")
+        builder.setMessage(getString(R.string.image_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("삭제") { _, _ ->
             presenter?.deleteImage(imageNum)
@@ -99,12 +107,9 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
             .show()
     }
 
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    override fun finishActivity() {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -117,7 +122,7 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
                 }
             }
         } else {
-            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
         }
     }
 
@@ -154,13 +159,6 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
         finish()
     }
 
-    override fun finishActivity() {
-        setResult(Activity.RESULT_OK)
-        finish()
-    }
-
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -172,19 +170,13 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
+                        presenter?.deniedPermission()
                     }
                     return
                 }
             }
         }
     }
-
-    override fun getSelectSubject(): String = WF_subject.selectedItem.toString()
-    override fun isTitleEmpty(): Boolean = WF_title.text.isNullOrEmpty()
-    override fun isContentEmpty(): Boolean = WF_content.text.isNullOrEmpty()
-    override fun getContentText():String = WF_content.text.toString()
-    override fun getTitleText():String = WF_title.text.toString()
 
     override fun setEnable(boolean: Boolean) {
         WF_saveButton.isEnabled = boolean

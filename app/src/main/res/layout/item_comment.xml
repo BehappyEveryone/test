@@ -42,7 +42,6 @@
             android:ellipsize="end"
             android:maxWidth="200dp"
             android:maxLines="1"
-            android:text="닉네임"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@id/CI_profile"
             app:layout_constraintTop_toTopOf="@+id/CI_profile" />
@@ -86,7 +85,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/tedury2"
-            android:text="답장"
+            android:text="@string/reply_text"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/CI_profile"
             app:layout_constraintTop_toBottomOf="@+id/CI_content" />
@@ -99,7 +98,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/tedury2"
-            android:text="수정"
+            android:text="@string/modify_text"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/CI_deleteButton"
             app:layout_constraintTop_toBottomOf="@+id/CI_content" />
@@ -112,7 +111,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="2dp"
             android:background="@drawable/tedury2"
-            android:text="삭제"
+            android:text="@string/delete_text"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CI_content" />

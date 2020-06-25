@@ -53,7 +53,8 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         MF_showImage5.setOnClickListener(this)
         backButton.setOnClickListener(this)
 
-        imageViewList = arrayOf(MF_showImage1,MF_showImage2,MF_showImage3,MF_showImage4,MF_showImage5)
+        imageViewList =
+            arrayOf(MF_showImage1, MF_showImage2, MF_showImage3, MF_showImage4, MF_showImage5)
     }
 
     override fun onClick(v: View?) {
@@ -72,7 +73,7 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     override fun createShowImageDialog(imageNum: Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("이미지를 지우시겠습니까?")
+        builder.setMessage(getString(R.string.image_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("삭제") { _, _ ->
             presenter?.deleteImage(imageNum)
@@ -96,16 +97,16 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     }
 
     override fun setImage(imagePathList: ArrayList<String>) {
-        var extra:Int = -1
-        imagePathList.forEachIndexed {index: Int, s: String ->
+        var extra: Int = -1
+        imagePathList.forEachIndexed { index: Int, s: String ->
             extra = index
             imageViewList?.get(index)?.let {
                 it.visibility = View.VISIBLE
-                setServerImage(it,s)
+                setServerImage(it, s)
             }
         }
 
-        for(i in extra+1 until 5){
+        for (i in extra + 1 until 5) {
             imageViewList?.get(i)?.visibility = View.INVISIBLE
         }
     }
@@ -133,20 +134,6 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         finish()
     }
 
-    override fun finishActivity() {
-        setResult(Activity.RESULT_OK)
-        finish()
-    }
-
-    override fun toastMessage(text: String) =
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
-    override fun getSelectSubject(): String = MF_subject.selectedItem.toString()
-    override fun isTitleEmpty(): Boolean = MF_title.text.isNullOrEmpty()
-    override fun isContentEmpty(): Boolean = MF_content.text.isNullOrEmpty()
-    override fun getContentText(): String = MF_content.text.toString()
-    override fun getTitleText(): String = MF_title.text.toString()
-
     override fun setDefault(subject: String, title: String, content: String) {
         arrayAdapter?.let {
             MF_subject.setSelection(it.getPosition(subject))
@@ -155,12 +142,9 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
         MF_content.setText(content)
     }
 
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    override fun finishActivity() {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -173,7 +157,7 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
                 }
             }
         } else {
-            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
         }
     }
 
@@ -188,7 +172,7 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
+                        presenter?.deniedPermission()
                     }
                     return
                 }
@@ -209,10 +193,16 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     private fun modifyForumDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("해당 글을 수정하시겠습니까?")
+        builder.setMessage(getString(R.string.forum_modify_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("확인") { _, _ ->
-            presenter?.saveClick()
+            presenter?.saveClick(
+                MF_title.text.isNullOrEmpty(),
+                MF_content.text.isNullOrEmpty(),
+                MF_subject.selectedItem.toString(),
+                MF_title.text.toString(),
+                MF_content.text.toString()
+            )
         }
         builder.show()
     }

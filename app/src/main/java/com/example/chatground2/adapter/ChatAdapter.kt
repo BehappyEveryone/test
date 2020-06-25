@@ -33,21 +33,21 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                     2//left
                 }
             }
-            "strategic" -> {
+            "strategicText" -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     3//right
                 } else {
                     4//left
                 }
             }
-            "image" -> {
+            "image","strategicImage" -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     5//right
                 } else {
                     6//left
                 }
             }
-            "video" -> {
+            "video","strategicVideo" -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     7//right
                 } else {

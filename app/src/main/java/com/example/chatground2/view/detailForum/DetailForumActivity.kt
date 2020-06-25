@@ -5,27 +5,22 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.example.chatground2.adapter.CommentsAdapter
-import com.example.chatground2.api.IpAddress
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_forum.*
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_camera
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_deleteButton
-import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.activity_write_forum.backButton
-import java.io.File
 
 class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForumView,
     View.OnClickListener {
@@ -79,14 +74,12 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
 
             R.id.backButton -> onBackPressed()
             R.id.DF_camera -> presenter?.onCameraClick()
-            R.id.DF_commentSend -> presenter?.onCommentSendClick()
+            R.id.DF_commentSend -> presenter?.onCommentSendClick(DF_commentMessage.text.isNullOrEmpty(),DF_commentMessage.text.toString())
             R.id.DF_deleteButton -> deleteForumDialog()
             R.id.DF_modifyButton -> presenter?.modifyForum()
             R.id.DF_recommend -> presenter?.onRecommendClick()
         }
     }
-
-    override fun getCommentMessageText(): String = DF_commentMessage.text.toString()
 
     override fun setDateText(text: String) {
         DF_date.text = text
@@ -205,7 +198,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
     override fun deleteCommentImageDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("이미지를 지우시겠습니까?")
+        builder.setMessage(getString(R.string.image_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("삭제") { _, _ ->
             presenter?.deleteImage()
@@ -231,13 +224,11 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         finish()
     }
 
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
     override fun recommendDialog(boolean: Boolean) {
         val message: String = if (boolean) {
-            "추천을 취소하시겠습니까?"
+            getString(R.string.recommend_cancel_message)
         } else {
-            "해당 게시글을 추천 하시겠습니까?"
+            getString(R.string.recommend_message)
         }
 
         val builder = AlertDialog.Builder(this)
@@ -253,7 +244,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
     override fun deleteForumDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("해당 글을 삭제하시겠습니까?")
+        builder.setMessage(getString(R.string.forum_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("확인") { _, _ ->
             presenter?.deleteForum()
@@ -264,7 +255,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
     override fun deleteCommentDialog(position:Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("해당 댓글을 삭제하시겠습니까?")
+        builder.setMessage(getString(R.string.comment_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("확인") { _, _ ->
             presenter?.deleteComment(position)
@@ -281,14 +272,6 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         backButton.isEnabled = boolean
     }
 
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -302,7 +285,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
                 }
             }
         } else {
-            toastMessage("취소 되었습니다.")
+            presenter?.resultCancel()
         }
     }
 
@@ -317,7 +300,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
+                        presenter?.deniedPermission()
                     }
                     return
                 }

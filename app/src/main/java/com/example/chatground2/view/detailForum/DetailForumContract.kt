@@ -15,7 +15,7 @@ interface DetailForumContract {
         var adapterModel: CommentsAdapterContract.Model?
         var adapterView: CommentsAdapterContract.View?
         fun detailForum()
-        fun onCommentSendClick()
+        fun onCommentSendClick(isContentEmpty:Boolean,comment:String)
         fun onPathCheck(imagePath: String?)
         fun galleryResult(data: Intent?)
         fun checkCameraPermission()
@@ -28,6 +28,8 @@ interface DetailForumContract {
         fun recommendForum()
         fun deleteComment(position: Int)
         fun setServerImage(imageView: ImageView, path: String)
+        fun deniedPermission()
+        fun resultCancel()
     }
 
     interface IDetailForumView{
@@ -35,7 +37,6 @@ interface DetailForumContract {
         fun deleteCommentImageDialog()
         fun createCommentImageDialog()
         fun progressVisible(boolean: Boolean)
-        fun toastMessage(text:String)
         fun finishActivity()
         fun setDateText(text: String)
         fun setSubjectText(text: String)
@@ -52,13 +53,11 @@ interface DetailForumContract {
         fun setModifyForumVisible(boolean: Boolean)
         fun enterModifyForum(intent: Intent)
         fun enterModifyComment(intent: Intent)
-        fun getCommentMessageText():String
         fun setCommentMessageText(text: String)
         fun recommendDialog(boolean: Boolean)
         fun deleteForumDialog()
         fun deleteCommentDialog(position:Int)
         fun setEnable(boolean: Boolean)
-        fun openGallery()
     }
 
     interface Listener

@@ -49,7 +49,6 @@
             android:ellipsize="end"
             android:maxWidth="200dp"
             android:maxLines="1"
-            android:text="닉네임"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@id/RI_profile"
             app:layout_constraintTop_toTopOf="@+id/RI_profile" />

@@ -4,13 +4,15 @@ import android.content.Intent
 
 interface WriteForumContract {
     interface IWriteForumPresenter{
-        fun saveClick()
+        fun saveClick(isTitleEmpty:Boolean,isContentEmpty:Boolean,subject:String,title:String,content:String)
         fun cameraClick()
         fun checkCameraPermission()
         fun galleryResult(data: Intent?)
         fun showImageClick(imageNum: Int)
         fun deleteImage(imageNum: Int)
         fun closeCursor()
+        fun deniedPermission()
+        fun resultCancel()
     }
 
     interface IWriteForumView{
@@ -18,15 +20,8 @@ interface WriteForumContract {
         fun createDialog()
         fun createShowImageDialog(imageNum: Int)
         fun progressVisible(boolean: Boolean)
-        fun toastMessage(text:String)
         fun finishActivity()
-        fun isTitleEmpty():Boolean
-        fun isContentEmpty():Boolean
-        fun getTitleText():String
-        fun getContentText():String
-        fun getSelectSubject():String
         fun setEnable(boolean: Boolean)
-        fun openGallery()
     }
 
     interface Listener

@@ -81,6 +81,16 @@ interface Api {
         @Part imagePart: MultipartBody.Part?
     ): Call<ResponseBody>
 
+    //댓글 수정
+    @Multipart
+    @PATCH("/forums/{idx}/comments/{id}")
+    fun modifyComment(
+        @Path("idx") idx: String,
+        @Path("id") commentId: String,
+        @PartMap hashMap: HashMap<String, RequestBody>,
+        @Part imagePart: MultipartBody.Part?
+    ): Call<ResponseBody>
+
     //댓글 지우기
     @DELETE("/forums/{idx}/comments/{id}")
     fun deleteComment(

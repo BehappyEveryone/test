@@ -87,10 +87,12 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
                                 if ((visibleItemCounter + firstVisibleItemPosition) >= totalItemCount) {
                                     isLoading = false
                                     presenter?.let {
-                                        if(it.isSearching()){
-                                            presenter?.callForums(this@ForumsFragment.F_searchEdit.text.toString())
-                                        }else
-                                        {
+                                        if (it.isSearching()) {
+                                            presenter?.callForums(
+                                                this@ForumsFragment.F_searchSpinner.selectedItem.toString(),
+                                                this@ForumsFragment.F_searchEdit.text.toString()
+                                            )
+                                        } else {
                                             presenter?.callForums()
                                         }
                                     }
@@ -103,7 +105,7 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
 
             F_searchEdit.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    presenter?.searching(s.toString())
+                    presenter?.searching(F_searchSpinner.selectedItem.toString(), s.toString())
                 }
 
                 override fun beforeTextChanged(
@@ -160,8 +162,9 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
         F_swipeRefresh.isRefreshing = boolean
     }
 
-    override fun toastMessage(text: String) =
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+    override fun finishActivity() {
+        activity?.finish()
+    }
 
     override fun progressVisible(boolean: Boolean) {
         if (boolean) {
@@ -190,10 +193,6 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
         F_bestForumsButton.background = context?.let { ContextCompat.getDrawable(it, int) }
     }
 
-    override fun getSearchSpinner(): String = F_searchSpinner.selectedItem.toString()
-
-    override fun getSearchKeyword(): String = F_searchEdit.text.toString()
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -207,7 +206,7 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
                 }
             }
         } else {
-            Toast.makeText(context, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
         }
     }
 }

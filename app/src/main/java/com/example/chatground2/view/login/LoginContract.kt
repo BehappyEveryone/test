@@ -5,16 +5,13 @@ import com.example.chatground2.model.dto.UserDto
 interface LoginContract {
     interface ILoginPresenter{
         fun signUpButtonClick()
-        fun signInButtonClick()
+        fun signInButtonClick(email:String,password:String)
         fun autoLogin()
     }
 
     interface ILoginView{
         fun finishActivity()
         fun progressVisible(boolean: Boolean)
-        fun toastMessage(text:String)
-        fun getEmailText():String
-        fun getPasswordText():String
         fun enterMainActivity()
         fun enterSignUpActivity()
         fun setEmailText(text: String?)

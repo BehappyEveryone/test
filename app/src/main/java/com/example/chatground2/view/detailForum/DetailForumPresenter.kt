@@ -10,7 +10,7 @@ import com.example.chatground2.R
 import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
-import com.example.chatground2.model.dao.Model
+import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.model.dto.CommentDto
 import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.adapter.adapterContract.CommentsAdapterContract
@@ -31,10 +31,11 @@ class DetailForumPresenter(
     val view: DetailForumContract.IDetailForumView
 ) : DetailForumContract.IDetailForumPresenter, DetailForumContract.Listener {
 
-    private var model: Model = Model(context)
+    private var model: DetailForumModel = DetailForumModel(context)
     private var permission: Permission = Permission(context)
     private var shared: Shared = Shared(context)
-    private var gallery:Gallery = Gallery((context))
+    private var gallery:Gallery = Gallery(context)
+    private var toastMessage:ToastMessage = ToastMessage(context)
 
     private val gson = Gson()
     private var commentImagePath: String? = null
@@ -82,31 +83,35 @@ class DetailForumPresenter(
         model.recommendForum(idx.toString(), hashMap, this)
     }
 
-    override fun onCommentSendClick() {
-        view.progressVisible(true)
-        view.setEnable(false)
+    override fun onCommentSendClick(isContentEmpty:Boolean,comment:String) {
+        if (isContentEmpty) {
+            toastMessage.contentNull()
+        } else {
+            view.progressVisible(true)
+            view.setEnable(false)
 
-        val hashMap = HashMap<String, RequestBody>()
-        hashMap["content"] =
-            RequestBody.create(MediaType.parse("text/plain"), view.getCommentMessageText())
-        hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
-        if (!adapterModel?.getReplyCommentId().isNullOrEmpty()) {
-            hashMap["replyCommentId"] = RequestBody.create(
-                MediaType.parse("text/plain"),
-                adapterModel?.getReplyCommentId().toString()
-            )
+            val hashMap = HashMap<String, RequestBody>()
+            hashMap["content"] =
+                RequestBody.create(MediaType.parse("text/plain"), comment)
+            hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
+            if (!adapterModel?.getReplyCommentId().isNullOrEmpty()) {
+                hashMap["replyCommentId"] = RequestBody.create(
+                    MediaType.parse("text/plain"),
+                    adapterModel?.getReplyCommentId().toString()
+                )
+            }
+
+            var imagePart: MultipartBody.Part? = null
+
+            if (!commentImagePath.isNullOrEmpty()) {
+                val file = File(commentImagePath)
+                val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+
+                imagePart = MultipartBody.Part.createFormData("img", file.name, requestBody)
+            }
+
+            model.writeComment(idx.toString(), hashMap, imagePart, this)
         }
-
-        var imagePart: MultipartBody.Part? = null
-
-        if (!commentImagePath.isNullOrEmpty()) {
-            val file = File(commentImagePath)
-            val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
-
-            imagePart = MultipartBody.Part.createFormData("img", file.name, requestBody)
-        }
-
-        model.writeComment(idx.toString(), hashMap, imagePart, this)
     }
 
     override fun onCameraClick() {
@@ -130,10 +135,10 @@ class DetailForumPresenter(
     override fun checkCameraPermission() {
         when(permission.checkCameraPermission()){
             0 -> {//권한을 이미 허용
-                view.openGallery()
+                gallery.openGallery()
             }
             1-> {//이전에 이미 권한이 거부됨
-                view.toastMessage("권한을 허가해주십시오.")
+                toastMessage.requestPermission()
                 permission.setupPermissions()
             }
             3-> {//최초로 권한 요청
@@ -193,6 +198,14 @@ class DetailForumPresenter(
         }
     }
 
+    override fun deniedPermission() {
+        toastMessage.deniedPermission()
+    }
+
+    override fun resultCancel() {
+        toastMessage.resultCancel()
+    }
+
     override fun onDetailForumSuccess(forumDto: ForumDto?) {
         adapterModel?.clearItems()
         forumDto?.let {
@@ -243,27 +256,27 @@ class DetailForumPresenter(
     override fun onDetailForumFailure() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("해당 글을 찾을 수 없습니다.")
+        toastMessage.forumPathNull()
         view.finishActivity()
     }
 
     override fun onDeleteForumSuccess() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("게시글 삭제 성공")
+        toastMessage.retrofitSuccess()
         view.finishActivity()
     }
 
     override fun onDeleteForumFailure() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("게시글 삭제 실패")
+        toastMessage.retrofitFailure()
     }
 
     override fun onWriteCommentSuccess() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("댓글 작성 완료")
+        toastMessage.retrofitSuccess()
         view.setCommentMessageText("")
 
         deleteImage()
@@ -274,33 +287,27 @@ class DetailForumPresenter(
     override fun onWriteCommentFailure() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("댓글 작성 실패")
+        toastMessage.retrofitFailure()
     }
 
     override fun onDeleteCommentSuccess() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("댓글 삭제 성공")
+        toastMessage.retrofitSuccess()
         detailForum()
     }
 
     override fun onDeleteCommentFailure() {
         view.progressVisible(false)
         view.setEnable(true)
-        view.toastMessage("댓글 삭제 실패")
+        toastMessage.retrofitFailure()
         detailForum()
     }
 
     override fun onRecommendForumSuccess() {
         view.progressVisible(false)
         view.setEnable(true)
-        isRecommendExist?.let {
-            if (it) {
-                view.toastMessage("추천취소 성공")
-            } else {
-                view.toastMessage("추천 성공")
-            }
-        }
+        toastMessage.retrofitSuccess()
         isRecommendExist = null
         detailForum()
     }
@@ -308,19 +315,13 @@ class DetailForumPresenter(
     override fun onRecommendForumFailure() {
         view.progressVisible(false)
         view.setEnable(true)
-        isRecommendExist?.let {
-            if (it) {
-                view.toastMessage("추천취소 실패")
-            } else {
-                view.toastMessage("추천 실패")
-            }
-        }
+        toastMessage.retrofitFailure()
     }
 
     override fun onError(t: Throwable) {
         t.printStackTrace()
         view.progressVisible(false)
-        view.toastMessage("통신 에러")
+        toastMessage.retrofitError()
     }
 
     private fun onReplyClick(position: Int, state: Boolean) {
@@ -336,6 +337,7 @@ class DetailForumPresenter(
     private fun onModifyCommentClick(position: Int) {
         adapterModel?.getItem(position)?.let {
             val intent: Intent = Intent(context, CommentModifyActivity::class.java)
+            intent.putExtra("idx", idx)
             intent.putExtra("id", it._id)
             intent.putExtra("content", it.content)
             intent.putExtra("imagePath", it.imageUrl)

@@ -18,13 +18,17 @@ import java.io.FileOutputStream
 import android.os.Environment
 import android.util.Base64
 import com.example.chatground2.`class`.Shared
+import com.example.chatground2.model.dto.ChatDto
+import com.example.chatground2.model.dto.ChatRoomInfoDto
+import com.example.chatground2.model.dto.ChatSystemOrderDto
+import com.example.chatground2.model.dto.UserDto
 
 
 class SocketService : Service() {
 
     var mBinder: IBinder = SocketBinder()
 
-    private var shared:Shared? = null
+    private var shared: Shared? = null
 
     class SocketBinder : Binder() {
         fun getService(): SocketService { // 서비스 객체를 리턴
@@ -42,7 +46,7 @@ class SocketService : Service() {
         initialize()
 
         SocketIo.mSocket.on(Socket.EVENT_CONNECT, onConnect)
-        SocketIo.mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect)
+        SocketIo.mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect)
         SocketIo.mSocket.on("makeRoom", onMakeRoom)
         SocketIo.mSocket.on("matchMaking", onMatchMaking)
         SocketIo.mSocket.on("message", onMessage)
@@ -61,7 +65,7 @@ class SocketService : Service() {
         super.onDestroy()
 
         SocketIo.mSocket.off(Socket.EVENT_CONNECT, onConnect)
-        SocketIo.mSocket.off(Socket.EVENT_DISCONNECT,onDisconnect)
+        SocketIo.mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect)
         SocketIo.mSocket.off("makeRoom", onMakeRoom)
         SocketIo.mSocket.off("matchMaking", onMatchMaking)
         SocketIo.mSocket.off("message", onMessage)
@@ -75,7 +79,6 @@ class SocketService : Service() {
     fun isConnect(): Boolean = SocketIo.mSocket.connected()
 
     fun connectSocket() {
-        println("소켓연결시도")
         try {
             if (!SocketIo.mSocket.connected()) {
                 SocketIo.mSocket.connect()
@@ -86,7 +89,6 @@ class SocketService : Service() {
     }
 
     fun disconnectSocket() {
-        println("소켓연결해제시도")
         SocketIo.mSocket.disconnect()
     }
 
@@ -111,39 +113,45 @@ class SocketService : Service() {
     private val onRoomInfoChange = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
-        val intent: Intent = Intent("onRoomInfoChange")
-        intent.putExtra("onRoomInfoChangeValue", receivedData.toString())
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        shared?.gsonFromJson(receivedData.get("roomInfo").toString(), ChatRoomInfoDto::class.java)
+            ?.let { it1 ->
+                val intent: Intent = Intent("onRoomInfoChange")
+                intent.putExtra("onRoomInfoChangeValue", it1)
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            }
     }
 
     private val onMessage = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
-        println("메세지 : " + receivedData["type"])
+        shared?.gsonFromJson(receivedData.toString(), ChatDto::class.java)?.let { it1 ->
+            val binaryData = Base64.decode(it1.binaryData.toString(), Base64.DEFAULT)
 
-        if(receivedData["type"] == "image"){
-            val binaryData = Base64.decode(receivedData["binaryData"].toString(),Base64.DEFAULT)
-            val path = makeDirAndSaveFile(binaryData,0)
-            receivedData.put("content", "file://$path")
-        }
-        if(receivedData["type"] == "video"){
-            val binaryData = Base64.decode(receivedData["binaryData"].toString(),Base64.DEFAULT)
-            val path = makeDirAndSaveFile(binaryData,1)
-            receivedData.put("content", "$path")
-        }
+            if (it1.type == "image" || it1.type == "strategicImage") {
+                val path = makeDirAndSaveFile(binaryData, 0)
+                it1.content = "file://$path"
+            }
+            if (it1.type == "video" || it1.type == "strategicVideo") {
+                val path = makeDirAndSaveFile(binaryData, 1)
+                if (path != null) {
+                    it1.content = path
+                }
+            }
+            it1.binaryData = null
 
-        if (shared?.getMessage() != null) {
-            val jsonArray = JSONArray(shared?.getMessage())
-            jsonArray.put(receivedData)
-            shared?.setSharedPreference("message",jsonArray.toString())
-        } else {
-            shared?.setSharedPreference("message",JSONArray().put(receivedData).toString())
-        }
-        shared?.editorCommit()
+            if (shared?.getMessage().isNullOrEmpty()) {
+                shared?.setSharedPreference("message", JSONArray().put(shared?.gsonToJson(it1)).toString())
+            } else {
+                val jsonArray = JSONArray(shared?.getMessage())
+                jsonArray.put(shared?.gsonToJson(it1))
+                shared?.setSharedPreference("message", jsonArray.toString())
+            }
+            shared?.editorCommit()
 
-        val intent: Intent = Intent("onMessage")
-        intent.putExtra("onMessageValue", receivedData.toString())
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            val intent: Intent = Intent("onMessage")
+            intent.putExtra("onMessageValue", it1)
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
     }
 
     private val onOfferSubject = Emitter.Listener {
@@ -158,10 +166,12 @@ class SocketService : Service() {
     private val onPresentationOrder = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
-        val intent: Intent = Intent("onPresentationOrder")
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra("onPresentationOrderValue", receivedData.toString())
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        shared?.gsonFromJson(receivedData.toString(), ChatSystemOrderDto::class.java)?.let { it1 ->
+            val intent: Intent = Intent("onPresentationOrder")
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra("onPresentationOrderValue", it1)
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
     }
 
     private val reVoting = Emitter.Listener {
@@ -193,7 +203,7 @@ class SocketService : Service() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    private fun makeDirAndSaveFile(binaryData: ByteArray,type:Int): String? {
+    private fun makeDirAndSaveFile(binaryData: ByteArray, type: Int): String? {
         val direct = File(Environment.getExternalStorageDirectory().toString() + "/ChatGround")
 
         if (!direct.exists()) {
@@ -202,7 +212,7 @@ class SocketService : Service() {
             wallpaperDirectory.mkdirs()
         }
 
-        val file = when(type){
+        val file = when (type) {
             0 -> File("${Environment.getExternalStorageDirectory()}/ChatGround/${System.currentTimeMillis()}.png")
             1 -> File("${Environment.getExternalStorageDirectory()}/ChatGround/${System.currentTimeMillis()}.mp4")
             else -> null

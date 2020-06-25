@@ -8,17 +8,18 @@ interface ForumsContract {
         var adapterModel: ForumsAdapterContract.Model?
         var adapterView: ForumsAdapterContract.View?
         fun callForums()
-        fun callForums(keyword: String)
+        fun callForums(kind:String,keyword: String)
         fun refresh()
         fun writeClick()
         fun searchClick()
-        fun searching(keyword: String)
+        fun searching(kind: String,keyword: String)
         fun bestForumsClick()
         fun isSearching():Boolean
+        fun resultCancel()
     }
 
     interface IForumsView{
-        fun toastMessage(text:String)
+        fun finishActivity()
         fun progressVisible(boolean: Boolean)
         fun isRefreshing(boolean: Boolean)
         fun isLoading(boolean: Boolean)
@@ -27,8 +28,6 @@ interface ForumsContract {
         fun enterDetailForum(idx:Int?)
         fun setBestForumBackground(int:Int)
         fun setSearchBackground(int: Int)
-        fun getSearchSpinner():String
-        fun getSearchKeyword():String
     }
 
     interface Listener

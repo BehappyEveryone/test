@@ -15,6 +15,7 @@ import com.example.chatground2.api.IpAddress
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.dialog_comment_modify.*
 import java.io.File
 
@@ -28,10 +29,16 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         // Make us non-modal, so that others can receive touch events.
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        );
 
         // ...but notify us that it happened.
-        window.setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+        );
         setContentView(R.layout.dialog_comment_modify)
 
 
@@ -56,7 +63,10 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.CM_camera -> presenter?.cameraClick()
-            R.id.CM_modify -> presenter?.modifyComment()
+            R.id.CM_modify -> presenter?.modifyComment(
+                CM_content.text.isNullOrEmpty(),
+                CM_content.text.toString()
+            )
             R.id.CM_cancel -> presenter?.cancel()
         }
     }
@@ -64,7 +74,7 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
     override fun deleteCommentImageDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("알림")
-        builder.setMessage("이미지를 지우시겠습니까?")
+        builder.setMessage(getString(R.string.image_delete_message))
         builder.setNegativeButton("취소", null)
         builder.setPositiveButton("삭제") { _, _ ->
             presenter?.deleteImage()
@@ -84,8 +94,6 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
         }
     }
 
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
     override fun onBackPressed() {
         setResult(RESULT_CANCELED)
         finish()
@@ -102,50 +110,19 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
         CM_modify.isEnabled = boolean
     }
 
-    override fun setCameraImage(path:String?) {
-        if(path.isNullOrEmpty())
-        {
+    override fun setCameraImage(path: String?) {
+        if (path.isNullOrEmpty()) {
             CM_camera.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.write_forum_camera_icon
                 )
             )
-        }else
-        {
-            println("path is not null")
-
+        } else {
             if (path.substring(0, 11) == "forumImages") {
                 Picasso.get().load(IpAddress.BaseURL + path).into(CM_camera)
             } else {
                 Picasso.get().load(File(path)).into(CM_camera)
-            }
-        }
-    }
-
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            RequestCode.CAMERA_REQUEST.code -> {
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
-                    }
-                    return
-                }
             }
         }
     }
@@ -160,7 +137,26 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
                 }
             }
         } else {
-            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            RequestCode.CAMERA_REQUEST.code -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        presenter?.deniedPermission()
+                    }
+                    return
+                }
+            }
         }
     }
 }

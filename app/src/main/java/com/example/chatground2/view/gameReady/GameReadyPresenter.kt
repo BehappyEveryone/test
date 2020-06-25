@@ -61,13 +61,10 @@ class GameReadyPresenter(
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            println("GameReady 서비스 끊김")
             socketService = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            println("GameReady 서비스 연결")
-
             val mBinder = service as SocketService.SocketBinder
             socketService = mBinder.getService()
         }

@@ -1,16 +1,17 @@
 package com.example.chatground2.view.forums
 
 import android.content.Context
-import com.example.chatground2.model.dao.Model
 import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.R
+import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.adapter.adapterContract.ForumsAdapterContract
 import kotlin.collections.ArrayList
 
-class ForumsPresenter(private val context: Context, val view: ForumsContract.IForumsView) :
+class ForumsPresenter(val context: Context, val view: ForumsContract.IForumsView) :
     ForumsContract.IForumsPresenter, ForumsContract.Listener {
 
-    private var model: Model = Model(context)
+    private var model: ForumsModel = ForumsModel(context)
+    private var toastMessage:ToastMessage = ToastMessage(context)
 
     private var isBestForum = false
     private var isSearch = false
@@ -39,7 +40,7 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
         model.callForums(hashMap, this)
     }
 
-    override fun callForums(keyword: String) {
+    override fun callForums(kind:String, keyword: String) {
         view.isLoading(false)
         view.progressVisible(true)
         pageNum++
@@ -48,7 +49,7 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
         hashMap["page"] = pageNum
         hashMap["best"] = isBestForum
         hashMap["search"] = true
-        hashMap["kind"] = view.getSearchSpinner()
+        hashMap["kind"] = kind
         hashMap["keyword"] = keyword
 
         model.callForums(hashMap, this)
@@ -90,14 +91,18 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
         }
     }
 
-    override fun searching(keyword: String) {
+    override fun searching(kind:String,keyword: String) {
         pageNum = 0
         isRefresh = true
-        callForums(keyword)
+        callForums(kind,keyword)
     }
 
     private fun clickForum(position: Int) {
         view.enterDetailForum(adapterModel?.getItem(position)?.idx)
+    }
+
+    override fun resultCancel() {
+        toastMessage.resultCancel()
     }
 
     override fun onCallForumsSuccess(result: ArrayList<ForumDto>?) {
@@ -117,14 +122,14 @@ class ForumsPresenter(private val context: Context, val view: ForumsContract.IFo
 
     override fun onCallForumsFailure() {
         view.progressVisible(false)
-        view.toastMessage("마지막 글입니다.")
         view.isRefreshing(false)
+        toastMessage.forumLast()
     }
 
     override fun onError(t:Throwable) {
         t.printStackTrace()
         view.progressVisible(false)
         view.isRefreshing(false)
-        view.toastMessage("통신 실패")
+        toastMessage.retrofitError()
     }
 }

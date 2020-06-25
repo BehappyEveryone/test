@@ -35,4 +35,20 @@ class Gallery(val context: Context) {
             c?.close()
         }
     }
+
+    fun openGallery() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "image/*"
+        (context as Activity).startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
+    }
+
+    fun openVideo() {
+        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.type = "video/*"
+        (context as Activity).startActivityForResult(intent, RequestCode.OPEN_VIDEO.code)
+    }
 }

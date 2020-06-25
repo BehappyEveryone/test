@@ -75,8 +75,8 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
         when (v?.id) {
             R.id.CG_drawerButton -> presenter?.drawerClick()
             R.id.CG_sendButton -> presenter?.sendMessage(CG_message.text.toString())
-            R.id.CG_agree -> presenter?.setOpinion(true)
-            R.id.CG_oppose -> presenter?.setOpinion(false)
+            R.id.CG_agree -> presenter?.setOpinion(true,CG_agree.isSelected,CG_oppose.isSelected)
+            R.id.CG_oppose -> presenter?.setOpinion(false,CG_agree.isSelected,CG_oppose.isSelected)
             R.id.CG_plus -> presenter?.plusClick()
             R.id.CD_exit -> presenter?.leaveDialog()
             R.id.CD_exitText -> presenter?.leaveDialog()
@@ -86,8 +86,6 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
     override fun onBackPressed() {
         presenter?.leaveDialog()
     }
-
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
     override fun setMessageClear() {
         CG_message.setText("")
@@ -136,13 +134,9 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
         CG_agree.isSelected = boolean
     }
 
-    override fun getAgreeButtonSelected(): Boolean = CG_agree.isSelected
-
     override fun setOpposeButtonSelected(boolean: Boolean) {
         CG_oppose.isSelected = boolean
     }
-
-    override fun getOpposeButtonSelected(): Boolean = CG_oppose.isSelected
 
     override fun setTimeText(text: String) {
         CG_time.text = text
@@ -195,22 +189,6 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
         builder.show()
     }
 
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
-    }
-
-    override fun openVideo() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "video/*"
-        startActivityForResult(intent, RequestCode.OPEN_VIDEO.code)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -224,7 +202,7 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
                 }
             }
         } else {
-            Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
         }
     }
 
@@ -239,7 +217,7 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
+                        presenter?.deniedPermission()
                     }
                     return
                 }

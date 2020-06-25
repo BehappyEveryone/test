@@ -64,12 +64,12 @@ class GameReadyFragment : Fragment(), View.OnClickListener, GameReadyContract.IG
 
     override fun setMatching() {
         GR_ready.background = ContextCompat.getDrawable(activity!!, R.drawable.button4)
-        GR_ready.text = "STOP"
+        GR_ready.text = getString(R.string.capital_stop)
     }
 
     override fun setReady() {
         GR_ready.background = ContextCompat.getDrawable(activity!!, R.drawable.button3)
-        GR_ready.text = "READY"
+        GR_ready.text = getString(R.string.capital_ready)
     }
 
     override fun onClick(v: View?) {

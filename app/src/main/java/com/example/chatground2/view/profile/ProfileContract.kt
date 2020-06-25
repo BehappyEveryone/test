@@ -5,7 +5,7 @@ import com.example.chatground2.model.dto.UserDto
 
 interface ProfileContract {
     interface IProfilePresenter{
-        fun saveProfile()
+        fun saveProfile(introduce: String)
         fun callUser()
         fun logout()
         fun logoutClick()
@@ -15,6 +15,8 @@ interface ProfileContract {
         fun checkCameraPermission()
         fun closeCursor()
         fun defaultImage()
+        fun deniedPermission()
+        fun resultCancel()
     }
 
     interface IProfileView{
@@ -24,13 +26,10 @@ interface ProfileContract {
         fun setProfileImage(path:String?)
         fun finishActivity()
         fun enterLoginActivity()
-        fun toastMessage(text:String)
         fun progressVisible(boolean: Boolean)
         fun logoutDialog()
         fun imageDialog()
-        fun getIntroduce():String
         fun setEnable(boolean: Boolean)
-        fun openGallery()
     }
 
     interface Listener

@@ -20,12 +20,12 @@
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/core-1.1.0.aar/f4d2a0a518883de0ceb15fe4f8aa7df9/res/drawable-xhdpi-v4/notification_bg_low_pressed.9.png"
     },
     {
-        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_scrubber_track_mtrl_alpha.9.png.flat",
-        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/drawable-xxhdpi-v4/abc_scrubber_track_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable_inbox2.9.png.flat",
         "source": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/src/main/res/drawable/inbox2.9.png"
+    },
+    {
+        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_scrubber_track_mtrl_alpha.9.png.flat",
+        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/drawable-xxhdpi-v4/abc_scrubber_track_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable-hdpi-v4_notification_bg_low_normal.9.png.flat",
@@ -68,12 +68,12 @@
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/drawable/design_fab_background.xml"
     },
     {
-        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/color_material_on_primary_disabled.xml.flat",
-        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/color/material_on_primary_disabled.xml"
-    },
-    {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable-mdpi-v4_abc_menu_hardkey_panel_mtrl_mult.9.png.flat",
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/drawable-mdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png"
+    },
+    {
+        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/color_material_on_primary_disabled.xml.flat",
+        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/color/material_on_primary_disabled.xml"
     },
     {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/layout_text_view_with_line_height_from_style.xml.flat",
@@ -92,12 +92,12 @@
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/media-1.1.0.aar/3caa453a5feb9d6e5c248f5a7f0973f2/res/layout/notification_template_media_custom.xml"
     },
     {
-        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/color_design_icon_tint.xml.flat",
-        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/color/design_icon_tint.xml"
-    },
-    {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/color-v23_abc_tint_btn_checkable.xml.flat",
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/color-v23/abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/color_design_icon_tint.xml.flat",
+        "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/color/design_icon_tint.xml"
     },
     {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_list_selector_disabled_holo_dark.9.png.flat",
@@ -700,10 +700,6 @@
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/material-1.1.0.aar/a4e7623a3d95ab655f4d3510856267e0/res/color/mtrl_btn_text_btn_ripple_color.xml"
     },
     {
-        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/layout_activity_chatvideoitem.xml.flat",
-        "source": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/src/main/res/layout/activity_chatvideoitem.xml"
-    },
-    {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable_abc_list_selector_holo_dark.xml.flat",
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/drawable/abc_list_selector_holo_dark.xml"
     },
@@ -818,10 +814,6 @@
     {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/drawable_abc_ratingbar_indicator_material.xml.flat",
         "source": "/Users/gim-yeonjun/.gradle/caches/transforms-1/files-1.1/appcompat-1.1.0.aar/68f2d20d8cf9289ded62105de0beb0ff/res/drawable/abc_ratingbar_indicator_material.xml"
-    },
-    {
-        "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/layout_activity_chatimageitem.xml.flat",
-        "source": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/src/main/res/layout/activity_chatimageitem.xml"
     },
     {
         "merged": "/Users/gim-yeonjun/AndroidStudioProjects/cgClient/app/build/intermediates/res/merged/debug/layout_notification_media_action.xml.flat",

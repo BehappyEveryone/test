@@ -57,7 +57,7 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.P_save -> presenter?.saveProfile()
+            R.id.P_save -> presenter?.saveProfile(P_introduce.text.toString())
             R.id.P_logout -> presenter?.logoutClick()
             R.id.P_profileImage -> presenter?.profileImageClick()
         }
@@ -149,9 +149,6 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
         P_nickname.text = text
     }
 
-    override fun toastMessage(text: String) =
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-
     override fun progressVisible(boolean: Boolean) {
         if (boolean) {
             P_progressBar.visibility = View.VISIBLE
@@ -159,8 +156,6 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
             P_progressBar.visibility = View.INVISIBLE
         }
     }
-
-    override fun getIntroduce(): String = P_introduce.text.toString()
 
     override fun setEnable(boolean: Boolean) {
         P_profileImage.isEnabled = boolean
@@ -174,14 +169,6 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
         activity?.finish()
     }
 
-    override fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
-        val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        startActivityForResult(intent, RequestCode.OPEN_GALLERY.code)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -192,7 +179,7 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
                 }
             }
         } else {
-            Toast.makeText(context, "취소 되었습니다.", Toast.LENGTH_LONG).show();
+            presenter?.resultCancel()
         }
     }
 
@@ -207,7 +194,7 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        toastMessage("권한이 거부되었습니다.")
+                        presenter?.deniedPermission()
                     }
                     return
                 }

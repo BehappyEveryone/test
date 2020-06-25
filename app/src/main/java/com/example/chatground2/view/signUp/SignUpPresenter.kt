@@ -1,46 +1,51 @@
 package com.example.chatground2.view.signUp
 
 import android.content.Context
-import com.example.chatground2.model.dao.Model
-import com.example.chatground2.model.dto.UserDto
+import com.example.chatground2.`class`.ToastMessage
 import java.util.regex.Pattern
 
 class SignUpPresenter(
-    private val context: Context,
+    val context: Context,
     val view: SignUpContract.ISignUpView
 ) : SignUpContract.ISignUpPresenter, SignUpContract.Listener {
 
-    private var model: Model = Model(context)
+    private var model: SignUpModel = SignUpModel(context)
+    private var toastMessage: ToastMessage = ToastMessage(context)
 
     private var passEmail: Boolean = false
     private var passNickname: Boolean = false
     private var passPassword: Boolean = false
     private var passPasswordConfirm: Boolean = false
 
-    fun emptyCheck(): Boolean {
+    override fun emptyCheck(
+        isEmailEmpty: Boolean,
+        isPasswordEmpty: Boolean,
+        isPasswordConfirmEmpty: Boolean,
+        isNicknameEmpty: Boolean
+    ): Boolean {
         when {
-            view.getEmailText().isEmpty() -> {
-                view.toastMessage("이메일을 입력하세요")
+            isEmailEmpty -> {
+                toastMessage.emailNull()
                 return false
             }
-            view.getPasswordText().isEmpty() -> {
-                view.toastMessage("비밀번호를 압력하세요")
+            isPasswordEmpty -> {
+                toastMessage.passwordNull()
                 return false
             }
-            view.getPasswordConfirmText().isEmpty() -> {
-                view.toastMessage("비밀번호 확인을 입력하세요")
+            isPasswordConfirmEmpty -> {
+                toastMessage.passwordConfirmNull()
                 return false
             }
-            view.getNicknameText().isEmpty() -> {
-                view.toastMessage("닉네임을 입력하세요")
+            isNicknameEmpty -> {
+                toastMessage.nicknameNull()
                 return false
             }
-            else -> return true
         }
+        return true
     }
 
-    override fun samePassword(text: String) {
-        passPasswordConfirm = if (text == view.getPasswordText()) {
+    override fun samePassword(password: String, passwordConfirm: String) {
+        passPasswordConfirm = if (password == passwordConfirm) {
             view.setPasswordConfirmCheckAlpha(1.0f)
             true
         } else {
@@ -63,51 +68,51 @@ class SignUpPresenter(
         }
     }
 
-    override fun signUpButtonClick() {
+    override fun signUpButtonClick(emailText: String, passwordText: String, nicknameText: String) {
         when {
             !passEmail -> {
-                view.toastMessage("이메일 중복검사를 해주세요.")
+                toastMessage.requestEmailOverlap()
             }
             !passPassword -> {
-                view.toastMessage("비밀번호가 틀립니다.")
+                toastMessage.passwordForm()
             }
             !passPasswordConfirm -> {
-                view.toastMessage("비밀번호가 일치하지 않습니다")
+                toastMessage.passwordConfirmFail()
             }
             !passNickname -> {
-                view.toastMessage("닉네임 중복검사를 해주세요")
+                toastMessage.requestNicknameOverlap()
             }
             else -> {
                 val hashMap = HashMap<String, Any>()
-                hashMap["email"] = view.getEmailText()
-                hashMap["password"] = view.getPasswordText()
-                hashMap["nickname"] = view.getNicknameText()
+                hashMap["email"] = emailText
+                hashMap["password"] = passwordText
+                hashMap["nickname"] = nicknameText
                 model.signUp(hashMap, this)
             }
         }
     }
 
-    override fun emailOverlapButtonClick() {
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(view.getEmailText()).matches()) {
+    override fun emailOverlapButtonClick(emailText: String) {
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
             val hashMap = HashMap<String, Any>()
-            hashMap["email"] = view.getEmailText()
+            hashMap["email"] = emailText
             model.emailOverlap(hashMap, this)
         } else {
-            view.toastMessage("이메일 형식에 맞게 입력해주세요")
+            toastMessage.emailForm()
         }
     }
 
-    override fun nicknameOverlapButtonClick() {
+    override fun nicknameOverlapButtonClick(nicknameText: String) {
         if (Pattern.matches(
                 "^[a-zA-Z0-9가-힣]{4,12}$",//영문,한글,숫자 아무렇게나 4~12자리
-                view.getPasswordText()
+                nicknameText
             )
         ) {
             val hashMap = HashMap<String, Any>()
-            hashMap["nickname"] = view.getNicknameText()
+            hashMap["nickname"] = nicknameText
             model.nicknameOverlap(hashMap, this)
         } else {
-            view.toastMessage("닉네임 형식에 맞게 입력해주세요")
+            toastMessage.nicknameForm()
         }
     }
 
@@ -123,32 +128,32 @@ class SignUpPresenter(
 
     override fun onEmailOverlapSuccess() {
         passEmail = true
-        view.toastMessage("사용할 수 있는 이메일입니다")
+        toastMessage.emailOverlapPass()
         view.setEmailCheckAlpha(1.0f)
     }
 
     override fun onEmailOverlapFailure() {
         passEmail = false
-        view.toastMessage("이미 존재하는 이메일입니다")
+        toastMessage.emailOverlapFail()
         view.emailClear()
         view.setEmailCheckAlpha(0.4f)
     }
 
     override fun onNicknameOverlapSuccess() {
         passNickname = true
-        view.toastMessage("사용할 수 있는 닉네임입니다")
+        toastMessage.nicknameOverlapPass()
         view.setNicknameCheckAlpha(1.0f)
     }
 
     override fun onNicknameOverlapFailure() {
         passNickname = false
-        view.toastMessage("이미 존재하는 닉네임입니다")
+        toastMessage.nicknameOverlapFail()
         view.nicknameClear()
         view.setNicknameCheckAlpha(0.4f)
     }
 
     override fun onSignUpSuccess() {
-        view.toastMessage("가입 성공")
+        toastMessage.signUpSuccess()
         view.finishActivity()
     }
 
@@ -157,12 +162,12 @@ class SignUpPresenter(
         passNickname = false
         passPassword = false
         passPasswordConfirm = false
-        view.toastMessage("가입 실패")
+        toastMessage.signUpFailure()
         view.allClear()
     }
 
     override fun onError(t: Throwable) {
         t.printStackTrace()
-        view.toastMessage("통신 실패")
+        toastMessage.retrofitError()
     }
 }

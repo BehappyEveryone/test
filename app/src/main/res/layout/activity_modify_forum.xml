@@ -18,7 +18,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="글수정"
+        android:text="@string/modify_forum_top"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,24 +64,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/MF_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@null"
-        android:gravity="start"
-        android:hint="내용을 입력하세요."
-        android:padding="10dp"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/MF_title" />
-
-    <EditText
         android:id="@+id/MF_title"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@null"
         android:gravity="start"
-        android:hint="제목을 입력하세요."
+        android:hint="@string/forum_title_null"
         android:padding="10dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
@@ -90,6 +78,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
+    <EditText
+        android:id="@+id/MF_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:gravity="start"
+        android:hint="@string/forum_content_null"
+        android:padding="10dp"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintTop_toBottomOf="@+id/MF_title" />
 
     <View
         android:id="@+id/view4"

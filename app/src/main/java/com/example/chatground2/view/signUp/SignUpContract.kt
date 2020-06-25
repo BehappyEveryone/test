@@ -5,12 +5,13 @@ import com.example.chatground2.model.dto.UserDto
 interface SignUpContract {
     interface ISignUpPresenter{
         fun validatedPassword(text: String)
-        fun samePassword(text: String)
-        fun signUpButtonClick()
-        fun emailOverlapButtonClick()
-        fun nicknameOverlapButtonClick()
+        fun samePassword(password: String,passwordConfirm:String)
+        fun signUpButtonClick(emailText: String, passwordText: String, nicknameText: String)
+        fun emailOverlapButtonClick(emailText:String)
+        fun nicknameOverlapButtonClick(nicknameText:String)
         fun emailChange()
         fun nicknameChange()
+        fun emptyCheck(isEmailEmpty:Boolean,isPasswordEmpty:Boolean,isPasswordConfirmEmpty:Boolean,isNicknameEmpty:Boolean): Boolean
     }
 
     interface ISignUpView{
@@ -19,11 +20,6 @@ interface SignUpContract {
         fun allClear()
         fun finishActivity()
         fun progressVisible(boolean: Boolean)
-        fun toastMessage(text:String)
-        fun getEmailText():String
-        fun getPasswordText():String
-        fun getPasswordConfirmText():String
-        fun getNicknameText():String
         fun setEmailCheckAlpha(float: Float)
         fun setPasswordCheckAlpha(float: Float)
         fun setPasswordConfirmCheckAlpha(float: Float)

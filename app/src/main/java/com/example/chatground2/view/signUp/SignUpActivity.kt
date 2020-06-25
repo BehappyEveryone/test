@@ -38,7 +38,7 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.ISignUpView, View.OnC
 
         SU_passwordConfirm.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                presenter?.samePassword(s.toString())
+                presenter?.samePassword(SU_password.text.toString(),s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -87,16 +87,6 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.ISignUpView, View.OnC
 
     override fun finishActivity() = finish()
 
-    override fun toastMessage(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
-    override fun getEmailText(): String = SU_email.text.toString()
-
-    override fun getPasswordText(): String = SU_password.text.toString()
-
-    override fun getPasswordConfirmText(): String = SU_passwordConfirm.text.toString()
-
-    override fun getNicknameText(): String = SU_nickname.text.toString()
-
     override fun setEmailCheckAlpha(float: Float) {
         SU_emailCheck.alpha = float
     }
@@ -133,12 +123,12 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.ISignUpView, View.OnC
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.SU_emailOverlap -> presenter?.emailOverlapButtonClick()
-            R.id.SU_nicknameOverlap -> presenter?.nicknameOverlapButtonClick()
+            R.id.SU_emailOverlap -> presenter?.emailOverlapButtonClick(SU_email.text.toString())
+            R.id.SU_nicknameOverlap -> presenter?.nicknameOverlapButtonClick(SU_nickname.toString())
             R.id.SU_signUp -> {
-                if(presenter?.emptyCheck()!!)
+                if(presenter?.emptyCheck(SU_email.text.isNullOrEmpty(),SU_password.text.isNullOrEmpty(),SU_passwordConfirm.text.isNullOrEmpty(),SU_nickname.text.isNullOrEmpty())!!)
                 {
-                    presenter?.signUpButtonClick()
+                    presenter?.signUpButtonClick(SU_email.text.toString(),SU_password.text.toString(),SU_nickname.text.toString())
                 }
             }
         }
