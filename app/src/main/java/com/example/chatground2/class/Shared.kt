@@ -2,12 +2,12 @@ package com.example.chatground2.`class`
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.chatground2.model.KeyName.autoBoolean
-import com.example.chatground2.model.KeyName.autoEmail
-import com.example.chatground2.model.KeyName.autoPassword
-import com.example.chatground2.model.KeyName.sharedChatGroundText
-import com.example.chatground2.model.KeyName.sharedMessage
-import com.example.chatground2.model.KeyName.userCapital
+import com.example.chatground2.model.Constant.autoBoolean
+import com.example.chatground2.model.Constant.autoEmail
+import com.example.chatground2.model.Constant.autoPassword
+import com.example.chatground2.model.Constant.sharedChatGroundText
+import com.example.chatground2.model.Constant.sharedMessage
+import com.example.chatground2.model.Constant.userCapital
 import com.example.chatground2.model.dto.UserDto
 import com.google.gson.Gson
 

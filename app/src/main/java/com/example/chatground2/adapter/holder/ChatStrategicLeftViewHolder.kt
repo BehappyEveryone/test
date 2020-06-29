@@ -6,9 +6,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.R
-import com.example.chatground2.model.KeyName.agree
-import com.example.chatground2.model.KeyName.neutrality
-import com.example.chatground2.model.KeyName.oppose
+import com.example.chatground2.model.Constant.agree
+import com.example.chatground2.model.Constant.neutrality
+import com.example.chatground2.model.Constant.oppose
 import com.example.chatground2.model.dto.ChatDto
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso

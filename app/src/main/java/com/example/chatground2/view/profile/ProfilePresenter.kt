@@ -9,11 +9,11 @@ import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
 import com.example.chatground2.api.IpAddress
-import com.example.chatground2.model.KeyName.forumImageServerPath
-import com.example.chatground2.model.KeyName.imageUploadName
-import com.example.chatground2.model.KeyName.introduceText
-import com.example.chatground2.model.KeyName.profileText
-import com.example.chatground2.model.KeyName.userCapital
+import com.example.chatground2.model.Constant.forumImageServerPath
+import com.example.chatground2.model.Constant.imageUploadName
+import com.example.chatground2.model.Constant.introduceText
+import com.example.chatground2.model.Constant.profileText
+import com.example.chatground2.model.Constant.userCapital
 import com.example.chatground2.model.dto.UserDto
 import okhttp3.MediaType
 import okhttp3.MultipartBody

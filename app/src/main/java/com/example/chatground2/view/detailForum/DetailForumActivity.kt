@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.example.chatground2.adapter.CommentsAdapter
-import com.example.chatground2.model.KeyName.idxText
+import com.example.chatground2.model.Constant.idxText
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_forum.*
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_camera

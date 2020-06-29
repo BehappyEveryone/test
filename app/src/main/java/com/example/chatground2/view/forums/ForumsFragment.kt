@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,7 @@ import com.example.chatground2.model.RequestCode.DETAIL_FORUM
 import com.example.chatground2.model.RequestCode.WRITE_FORUM
 import com.example.chatground2.R
 import com.example.chatground2.adapter.ForumsAdapter
-import com.example.chatground2.model.KeyName.idxText
+import com.example.chatground2.model.Constant.idxText
 import com.example.chatground2.view.detailForum.DetailForumActivity
 import com.example.chatground2.view.writeForum.WriteForumActivity
 import kotlinx.android.synthetic.main.fragment_forums.*

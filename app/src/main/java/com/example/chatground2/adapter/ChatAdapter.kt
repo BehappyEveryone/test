@@ -8,13 +8,13 @@ import com.example.chatground2.R
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.adapter.adapterContract.ChatAdapterContract
 import com.example.chatground2.adapter.holder.*
-import com.example.chatground2.model.KeyName.typeImageText
-import com.example.chatground2.model.KeyName.typeStrategicImageText
-import com.example.chatground2.model.KeyName.typeStrategicTextText
-import com.example.chatground2.model.KeyName.typeStrategicVideoText
-import com.example.chatground2.model.KeyName.typeSystemText
-import com.example.chatground2.model.KeyName.typeTextText
-import com.example.chatground2.model.KeyName.typeVideoText
+import com.example.chatground2.model.Constant.typeImageText
+import com.example.chatground2.model.Constant.typeStrategicImageText
+import com.example.chatground2.model.Constant.typeStrategicTextText
+import com.example.chatground2.model.Constant.typeStrategicVideoText
+import com.example.chatground2.model.Constant.typeSystemText
+import com.example.chatground2.model.Constant.typeTextText
+import com.example.chatground2.model.Constant.typeVideoText
 import com.example.chatground2.model.dto.ChatDto
 
 class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),

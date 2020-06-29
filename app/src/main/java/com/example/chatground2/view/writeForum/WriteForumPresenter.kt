@@ -7,11 +7,11 @@ import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
-import com.example.chatground2.model.KeyName.contentText
-import com.example.chatground2.model.KeyName.imageUploadName
-import com.example.chatground2.model.KeyName.subjectText
-import com.example.chatground2.model.KeyName.titleText
-import com.example.chatground2.model.KeyName.userText
+import com.example.chatground2.model.Constant.contentText
+import com.example.chatground2.model.Constant.imageUploadName
+import com.example.chatground2.model.Constant.subjectText
+import com.example.chatground2.model.Constant.titleText
+import com.example.chatground2.model.Constant.userText
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

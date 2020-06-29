@@ -55,7 +55,6 @@
     <string name="save_failure">저장 완료</string>
     <string name="save_success">저장 실패</string>
 
-    ////////////chatGround layout string
     <string name="chat_ground_title">채팅 방</string>
     <string name="chat_ground_time">00:00</string>
     <string name="chat_ground_agree">찬성</string>
@@ -63,7 +62,7 @@
     <string name="chat_ground_win">WIN</string>
     <string name="chat_ground_lose">LOSE</string>
     <string name="chat_ground_draw">DRAW</string>
-    ////////////login layout string
+
     <string name="login_title_text">ChatGround 로그인</string>
     <string name="login_request_email">이메일 주소를 입력해주십시오.</string>
     <string name="login_request_password">비밀번호를 입력해주십시오.</string>
@@ -113,6 +112,10 @@
 
     <string name="view_type_error">알 수 없는 뷰 타입 에러</string>
     <string name="image_load_error">이미지 로드 에러</string>
+
+    <string name="user_opinion_agree">찬</string>
+    <string name="user_opinion_oppose">반</string>
+    <string name="user_opinion_neutrality">중</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="gameExplanation">이 게임은 정치와 같은 평소에 우리가 꺼려하던 주제들에 대해 진솔하게 토론할 공간을 제공해주는 동시에 반대쪽 의견을 자신의 논리로 설득시켜 몇 명이 설득 당했느냐에 따라 승패를 나눠주는 게임입니다.</string>

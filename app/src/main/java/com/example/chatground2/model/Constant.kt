@@ -1,6 +1,6 @@
 package com.example.chatground2.model
 
-object KeyName {
+object Constant {
     //소켓 on
     const val socketOnConnect = "onConnect"
     const val socketOnDisconnect = "onDisconnect"
@@ -85,11 +85,6 @@ object KeyName {
     const val autoEmail = "AutoEmail"
     const val autoPassword = "AutoPassword"
     const val sharedMessage = "message"
-
-    const val agreeSign = "찬"
-    const val opposeSign = "반"
-    const val neutralitySign = "중"
-
 
     //path
     const val forumImageServerPath = "forumImages"

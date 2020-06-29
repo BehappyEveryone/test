@@ -3,12 +3,12 @@ package com.example.chatground2.view.login
 import android.content.Context
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
-import com.example.chatground2.model.KeyName.autoBoolean
-import com.example.chatground2.model.KeyName.autoEmail
-import com.example.chatground2.model.KeyName.autoPassword
-import com.example.chatground2.model.KeyName.emailText
-import com.example.chatground2.model.KeyName.passwordText
-import com.example.chatground2.model.KeyName.userCapital
+import com.example.chatground2.model.Constant.autoBoolean
+import com.example.chatground2.model.Constant.autoEmail
+import com.example.chatground2.model.Constant.autoPassword
+import com.example.chatground2.model.Constant.emailText
+import com.example.chatground2.model.Constant.passwordText
+import com.example.chatground2.model.Constant.userCapital
 import com.example.chatground2.model.dto.UserDto
 
 

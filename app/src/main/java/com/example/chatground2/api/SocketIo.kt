@@ -1,6 +1,6 @@
 package com.example.chatground2.api
 
-import com.example.chatground2.model.KeyName.neutrality
+import com.example.chatground2.model.Constant.neutrality
 import io.socket.client.IO
 import io.socket.client.Socket
 

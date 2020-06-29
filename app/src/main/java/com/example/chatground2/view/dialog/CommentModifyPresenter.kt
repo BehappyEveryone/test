@@ -7,13 +7,13 @@ import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Permission
 import com.example.chatground2.`class`.Shared
-import com.example.chatground2.model.KeyName.contentText
-import com.example.chatground2.model.KeyName.idText
-import com.example.chatground2.model.KeyName.idxText
-import com.example.chatground2.model.KeyName.imagePathText
-import com.example.chatground2.model.KeyName.imageUploadName
-import com.example.chatground2.model.KeyName.imageUrlText
-import com.example.chatground2.model.KeyName.userText
+import com.example.chatground2.model.Constant.contentText
+import com.example.chatground2.model.Constant.idText
+import com.example.chatground2.model.Constant.idxText
+import com.example.chatground2.model.Constant.imagePathText
+import com.example.chatground2.model.Constant.imageUploadName
+import com.example.chatground2.model.Constant.imageUrlText
+import com.example.chatground2.model.Constant.userText
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -107,7 +107,7 @@ class CommentModifyPresenter(
             var imagePart: MultipartBody.Part? = null
 
             if (!commentImagePath.isNullOrEmpty()) {
-                imagePart = if (gallery.isExistFile(commentImagePath!!)) {
+                imagePart = if (gallery.isServerExistFile(commentImagePath!!)) {
                     MultipartBody.Part.createFormData(imageUrlText, commentImagePath)
                 } else {
                     val file: File = File(commentImagePath)

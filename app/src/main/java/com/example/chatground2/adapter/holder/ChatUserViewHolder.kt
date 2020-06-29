@@ -6,12 +6,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.R
-import com.example.chatground2.model.KeyName.agree
-import com.example.chatground2.model.KeyName.agreeSign
-import com.example.chatground2.model.KeyName.neutrality
-import com.example.chatground2.model.KeyName.neutralitySign
-import com.example.chatground2.model.KeyName.oppose
-import com.example.chatground2.model.KeyName.opposeSign
+import com.example.chatground2.model.Constant.agree
+import com.example.chatground2.model.Constant.neutrality
+import com.example.chatground2.model.Constant.oppose
 import com.example.chatground2.model.dto.ChatUserDto
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -55,17 +52,17 @@ class ChatUserViewHolder(
                 it.opinion?.let { op ->
                     when (op) {
                         agree -> {
-                            opinion.text = agreeSign
+                            opinion.text = context.getString(R.string.user_opinion_agree)
                             opinion.background =
                                 ContextCompat.getDrawable(context, R.drawable.chat_drawer_agree)
                         }
                         oppose -> {
-                            opinion.text = opposeSign
+                            opinion.text = context.getString(R.string.user_opinion_oppose)
                             opinion.background =
                                 ContextCompat.getDrawable(context, R.drawable.chat_drawer_oppose)
                         }
                         neutrality -> {
-                            opinion.text = neutralitySign
+                            opinion.text = context.getString(R.string.user_opinion_neutrality)
                             opinion.background =
                                 ContextCompat.getDrawable(context, R.drawable.chat_drawer_neutrality)
                         }

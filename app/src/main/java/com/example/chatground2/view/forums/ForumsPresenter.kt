@@ -5,11 +5,11 @@ import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.R
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.adapter.adapterContract.ForumsAdapterContract
-import com.example.chatground2.model.KeyName.bestText
-import com.example.chatground2.model.KeyName.keywordText
-import com.example.chatground2.model.KeyName.kindText
-import com.example.chatground2.model.KeyName.pageText
-import com.example.chatground2.model.KeyName.searchText
+import com.example.chatground2.model.Constant.bestText
+import com.example.chatground2.model.Constant.keywordText
+import com.example.chatground2.model.Constant.kindText
+import com.example.chatground2.model.Constant.pageText
+import com.example.chatground2.model.Constant.searchText
 import kotlin.collections.ArrayList
 
 class ForumsPresenter(val context: Context, val view: ForumsContract.IForumsView) :

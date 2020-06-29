@@ -18,35 +18,34 @@ import java.io.FileOutputStream
 import android.os.Environment
 import android.util.Base64
 import com.example.chatground2.`class`.Shared
-import com.example.chatground2.model.KeyName.joinText
-import com.example.chatground2.model.KeyName.socketMakeRoom
-import com.example.chatground2.model.KeyName.socketMatchMaking
-import com.example.chatground2.model.KeyName.socketMessage
-import com.example.chatground2.model.KeyName.intentMessageValue
-import com.example.chatground2.model.KeyName.socketOfferSubject
-import com.example.chatground2.model.KeyName.intentOfferSubjectValue
-import com.example.chatground2.model.KeyName.socketPresentationOrder
-import com.example.chatground2.model.KeyName.intentPresentationOrderValue
-import com.example.chatground2.model.KeyName.socketReVoting
-import com.example.chatground2.model.KeyName.intentReVotingValue
-import com.example.chatground2.model.KeyName.socketResult
-import com.example.chatground2.model.KeyName.intentResultValue
-import com.example.chatground2.model.KeyName.socketRoomInfoChange
-import com.example.chatground2.model.KeyName.intentRoomInfoChangeValue
-import com.example.chatground2.model.KeyName.messageText
-import com.example.chatground2.model.KeyName.roomInfoText
-import com.example.chatground2.model.KeyName.roomText
-import com.example.chatground2.model.KeyName.socketOnConnect
-import com.example.chatground2.model.KeyName.socketOnDisconnect
-import com.example.chatground2.model.KeyName.typeImageText
-import com.example.chatground2.model.KeyName.typeStrategicImageText
-import com.example.chatground2.model.KeyName.typeStrategicVideoText
-import com.example.chatground2.model.KeyName.typeVideoText
-import com.example.chatground2.model.KeyName.userText
-import com.example.chatground2.model.KeyName.usersText
-import com.example.chatground2.model.dto.ChatDto
-import com.example.chatground2.model.dto.ChatRoomInfoDto
-import com.example.chatground2.model.dto.ChatSystemOrderDto
+import com.example.chatground2.model.Constant
+import com.example.chatground2.model.Constant.joinText
+import com.example.chatground2.model.Constant.socketMakeRoom
+import com.example.chatground2.model.Constant.socketMatchMaking
+import com.example.chatground2.model.Constant.socketMessage
+import com.example.chatground2.model.Constant.intentMessageValue
+import com.example.chatground2.model.Constant.socketOfferSubject
+import com.example.chatground2.model.Constant.intentOfferSubjectValue
+import com.example.chatground2.model.Constant.socketPresentationOrder
+import com.example.chatground2.model.Constant.intentPresentationOrderValue
+import com.example.chatground2.model.Constant.socketReVoting
+import com.example.chatground2.model.Constant.intentReVotingValue
+import com.example.chatground2.model.Constant.socketResult
+import com.example.chatground2.model.Constant.intentResultValue
+import com.example.chatground2.model.Constant.socketRoomInfoChange
+import com.example.chatground2.model.Constant.intentRoomInfoChangeValue
+import com.example.chatground2.model.Constant.messageText
+import com.example.chatground2.model.Constant.roomInfoText
+import com.example.chatground2.model.Constant.roomText
+import com.example.chatground2.model.Constant.socketOnConnect
+import com.example.chatground2.model.Constant.socketOnDisconnect
+import com.example.chatground2.model.Constant.typeImageText
+import com.example.chatground2.model.Constant.typeStrategicImageText
+import com.example.chatground2.model.Constant.typeStrategicVideoText
+import com.example.chatground2.model.Constant.typeVideoText
+import com.example.chatground2.model.Constant.userText
+import com.example.chatground2.model.Constant.usersText
+import com.example.chatground2.model.dto.*
 
 
 class SocketService : Service() {
@@ -119,19 +118,29 @@ class SocketService : Service() {
 
     private val onMatchMaking = Emitter.Listener {
         val receivedData = it[0] as JSONObject
+        receivedData.put(userText, shared?.getUser()?._id)
 
-        val data: JSONObject =
-            JSONObject().put(roomText, receivedData[roomText]).put(userText, shared?.getUser()?._id)
-        SocketIo.mSocket.emit(joinText, data)
+        SocketIo.mSocket.emit(joinText, receivedData)
     }
 
     private val onMakeRoom = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
         SocketIo.room = receivedData[roomText].toString()
+
+        val arrayList = ArrayList<ChatUserDto>()
+        for (i in 0 until receivedData.getJSONArray(usersText).length()) {
+            shared?.gsonFromJson(
+                receivedData.getJSONArray(usersText)[i].toString(),
+                ChatUserDto::class.java
+            )?.let { it1 ->
+                arrayList.add(it1)
+            }
+        }
+
         val chatIntent: Intent = Intent(this, ChatGroundActivity::class.java)
         chatIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        chatIntent.putExtra(usersText, receivedData.getJSONArray(usersText).toString())
+        chatIntent.putExtra(usersText, arrayList)
         startActivity(chatIntent)
     }
 
@@ -165,7 +174,10 @@ class SocketService : Service() {
             it1.binaryData = null
 
             if (shared?.getMessage().isNullOrEmpty()) {
-                shared?.setSharedPreference(messageText, JSONArray().put(shared?.gsonToJson(it1)).toString())
+                shared?.setSharedPreference(
+                    messageText,
+                    JSONArray().put(shared?.gsonToJson(it1)).toString()
+                )
             } else {
                 val jsonArray = JSONArray(shared?.getMessage())
                 jsonArray.put(shared?.gsonToJson(it1))
@@ -182,10 +194,13 @@ class SocketService : Service() {
     private val onOfferSubject = Emitter.Listener {
         val receivedData = it[0] as JSONObject
 
-        val intent: Intent = Intent(socketOfferSubject)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(intentOfferSubjectValue, receivedData.toString())
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        shared?.gsonFromJson(receivedData.toString(), ChatOfferSubjectDto::class.java)
+            ?.let { it1 ->
+                val intent: Intent = Intent(socketOfferSubject)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra(intentOfferSubjectValue, it1)
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            }
     }
 
     private val onPresentationOrder = Emitter.Listener {
@@ -200,20 +215,20 @@ class SocketService : Service() {
     }
 
     private val onReVoting = Emitter.Listener {
-        val receivedData = it[0] as JSONObject
+        val time:Int = it[0] as Int
 
         val intent: Intent = Intent(socketReVoting)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(intentReVotingValue, receivedData.toString())
+        intent.putExtra(intentReVotingValue, time)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     private val onResult = Emitter.Listener {
-        val receivedData = it[0] as JSONObject
+        val winner:String = it[0] as String
 
         val intent: Intent = Intent(socketResult)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(intentResultValue, receivedData.toString())
+        intent.putExtra(intentResultValue, winner)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 

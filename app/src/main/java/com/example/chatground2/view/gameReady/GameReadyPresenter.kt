@@ -3,10 +3,9 @@ package com.example.chatground2.view.gameReady
 import android.content.*
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.chatground2.model.KeyName.socketOnConnect
-import com.example.chatground2.model.KeyName.socketOnDisconnect
+import com.example.chatground2.model.Constant.socketOnConnect
+import com.example.chatground2.model.Constant.socketOnDisconnect
 import com.example.chatground2.service.SocketService
-import com.example.chatground2.view.mainActivity.MainContract
 
 class GameReadyPresenter(
     private val context: Context,

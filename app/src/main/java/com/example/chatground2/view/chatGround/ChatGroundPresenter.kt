@@ -14,52 +14,49 @@ import com.example.chatground2.`class`.Permission
 import com.example.chatground2.adapter.adapterContract.ChatAdapterContract
 import com.example.chatground2.adapter.adapterContract.ChatUserAdapterContract
 import com.example.chatground2.api.SocketIo
-import com.example.chatground2.model.KeyName.agree
-import com.example.chatground2.model.KeyName.all
-import com.example.chatground2.model.KeyName.binaryText
-import com.example.chatground2.model.KeyName.contentText
-import com.example.chatground2.model.KeyName.emitLeaveRoom
-import com.example.chatground2.model.KeyName.emitOnMakeRoom
-import com.example.chatground2.model.KeyName.emitOpinionResult
-import com.example.chatground2.model.KeyName.emitReVoteResult
-import com.example.chatground2.model.KeyName.emitResultValue
-import com.example.chatground2.model.KeyName.emitSendMessage
-import com.example.chatground2.model.KeyName.emitStrategicTimeComplete
-import com.example.chatground2.model.KeyName.emitStrategicTimeComplete2
-import com.example.chatground2.model.KeyName.intentMessageValue
-import com.example.chatground2.model.KeyName.intentOfferSubjectValue
-import com.example.chatground2.model.KeyName.intentPresentationOrderValue
-import com.example.chatground2.model.KeyName.intentReVotingValue
-import com.example.chatground2.model.KeyName.intentRoomInfoChangeValue
-import com.example.chatground2.model.KeyName.messageText
-import com.example.chatground2.model.KeyName.neutrality
-import com.example.chatground2.model.KeyName.opinionText
-import com.example.chatground2.model.KeyName.oppose
-import com.example.chatground2.model.KeyName.reVoteText
-import com.example.chatground2.model.KeyName.roomText
-import com.example.chatground2.model.KeyName.socketMessage
-import com.example.chatground2.model.KeyName.socketOfferSubject
-import com.example.chatground2.model.KeyName.socketPresentationOrder
-import com.example.chatground2.model.KeyName.socketReVoting
-import com.example.chatground2.model.KeyName.socketResult
-import com.example.chatground2.model.KeyName.socketRoomInfoChange
-import com.example.chatground2.model.KeyName.subjectText
-import com.example.chatground2.model.KeyName.timeText
-import com.example.chatground2.model.KeyName.typeImageText
-import com.example.chatground2.model.KeyName.typeStrategicImageText
-import com.example.chatground2.model.KeyName.typeStrategicTextText
-import com.example.chatground2.model.KeyName.typeStrategicVideoText
-import com.example.chatground2.model.KeyName.typeText
-import com.example.chatground2.model.KeyName.typeTextText
-import com.example.chatground2.model.KeyName.typeVideoText
-import com.example.chatground2.model.KeyName.userText
-import com.example.chatground2.model.KeyName.usersText
-import com.example.chatground2.model.KeyName.winnerText
+import com.example.chatground2.model.Constant.agree
+import com.example.chatground2.model.Constant.all
+import com.example.chatground2.model.Constant.binaryText
+import com.example.chatground2.model.Constant.contentText
+import com.example.chatground2.model.Constant.emitLeaveRoom
+import com.example.chatground2.model.Constant.emitOnMakeRoom
+import com.example.chatground2.model.Constant.emitOpinionResult
+import com.example.chatground2.model.Constant.emitReVoteResult
+import com.example.chatground2.model.Constant.emitResultValue
+import com.example.chatground2.model.Constant.emitSendMessage
+import com.example.chatground2.model.Constant.emitStrategicTimeComplete
+import com.example.chatground2.model.Constant.emitStrategicTimeComplete2
+import com.example.chatground2.model.Constant.intentMessageValue
+import com.example.chatground2.model.Constant.intentOfferSubjectValue
+import com.example.chatground2.model.Constant.intentPresentationOrderValue
+import com.example.chatground2.model.Constant.intentReVotingValue
+import com.example.chatground2.model.Constant.intentRoomInfoChangeValue
+import com.example.chatground2.model.Constant.messageText
+import com.example.chatground2.model.Constant.neutrality
+import com.example.chatground2.model.Constant.opinionText
+import com.example.chatground2.model.Constant.oppose
+import com.example.chatground2.model.Constant.reVoteText
+import com.example.chatground2.model.Constant.roomText
+import com.example.chatground2.model.Constant.socketMessage
+import com.example.chatground2.model.Constant.socketOfferSubject
+import com.example.chatground2.model.Constant.socketPresentationOrder
+import com.example.chatground2.model.Constant.socketReVoting
+import com.example.chatground2.model.Constant.socketResult
+import com.example.chatground2.model.Constant.socketRoomInfoChange
+import com.example.chatground2.model.Constant.subjectText
+import com.example.chatground2.model.Constant.timeText
+import com.example.chatground2.model.Constant.typeImageText
+import com.example.chatground2.model.Constant.typeStrategicImageText
+import com.example.chatground2.model.Constant.typeStrategicTextText
+import com.example.chatground2.model.Constant.typeStrategicVideoText
+import com.example.chatground2.model.Constant.typeText
+import com.example.chatground2.model.Constant.typeTextText
+import com.example.chatground2.model.Constant.typeVideoText
+import com.example.chatground2.model.Constant.userText
+import com.example.chatground2.model.Constant.usersText
+import com.example.chatground2.model.Constant.winnerText
 import com.example.chatground2.model.Paths.authorityPath
-import com.example.chatground2.model.dto.ChatDto
-import com.example.chatground2.model.dto.ChatRoomInfoDto
-import com.example.chatground2.model.dto.ChatSystemOrderDto
-import com.example.chatground2.model.dto.ChatUserDto
+import com.example.chatground2.model.dto.*
 import com.example.chatground2.service.SocketService
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -106,12 +103,9 @@ class ChatGroundPresenter(
     }
 
     override fun getIntent(intent: Intent) {
-        val users = JSONArray(intent.getStringExtra(usersText))
-        val arrayList = ArrayList<ChatUserDto>()
-        for (i in 0 until users.length()) {
-            arrayList.add(shared.gsonFromJson(users[i].toString(), ChatUserDto::class.java))
-        }
-        adapterChatUserModel?.addItems(arrayList)
+        val users: ArrayList<ChatUserDto> =
+            intent.getSerializableExtra(usersText) as ArrayList<ChatUserDto>
+        adapterChatUserModel?.addItems(users)
         adapterChatUserView?.notifyAdapter()
     }
 
@@ -274,20 +268,19 @@ class ChatGroundPresenter(
                     adapterChatUserView?.notifyAdapter()
                 }
                 socketOfferSubject -> {
-                    val json = JSONObject(intent.getStringExtra(intentOfferSubjectValue))
-                    val subject = json.get(subjectText).toString()
-                    val time = json.get(timeText).toString()
+                    val offerSubject: ChatOfferSubjectDto =
+                        intent.getParcelableExtra(intentOfferSubjectValue)
 
                     CoroutineScope(Dispatchers.Main).launch {
                         view.setEnable(false)
 
-                        for (i: Int in 0..subject.length) {
-                            view.setSubjectText(subject.substring(0, i))
+                        for (i: Int in 0..offerSubject.subject.length) {
+                            view.setSubjectText(offerSubject.subject.substring(0, i))
                             delay(100)
                         }
 
                         view.setOpinionVisible(true)
-                        for (i: Int in time.toInt() / 1000 downTo 0) {
+                        for (i: Int in offerSubject.time / 1000 downTo 0) {
                             if (i == 0) {
                                 view.setOpinionVisible(false)
                                 val opinion: String = SocketIo.opinion
@@ -301,13 +294,15 @@ class ChatGroundPresenter(
                                 view.setOpposeButtonSelected(false)
                             }
                             if (i < 10) {
-                                context?.getString(R.string.chat_ground_dynamic_time_second1,i)?.let {
-                                    view.setTimeText(it)
-                                }
+                                context?.getString(R.string.chat_ground_dynamic_time_second1, i)
+                                    ?.let {
+                                        view.setTimeText(it)
+                                    }
                             } else {
-                                context?.getString(R.string.chat_ground_dynamic_time_second2,i)?.let {
-                                    view.setTimeText(it)
-                                }
+                                context?.getString(R.string.chat_ground_dynamic_time_second2, i)
+                                    ?.let {
+                                        view.setTimeText(it)
+                                    }
                             }
                             delay(1000)//1000
                         }
@@ -360,36 +355,58 @@ class ChatGroundPresenter(
                                 }
                                 min == 0 -> when {
                                     sec < 10 -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_second1,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_second1,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
                                     else -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_second2,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_second2,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
                                 }
                                 min < 10 -> when {
                                     sec < 10 -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_minute1,min,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_minute1,
+                                            min,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
                                     else -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_minute2,min,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_minute2,
+                                            min,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
                                 }
                                 else -> when {
                                     sec < 10 -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_minute3,min,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_minute3,
+                                            min,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
                                     else -> {
-                                        context?.getString(R.string.chat_ground_dynamic_time_minute4,min,sec)?.let {
+                                        context?.getString(
+                                            R.string.chat_ground_dynamic_time_minute4,
+                                            min,
+                                            sec
+                                        )?.let {
                                             view.setTimeText(it)
                                         }
                                     }
@@ -400,14 +417,13 @@ class ChatGroundPresenter(
                     }
                 }
                 socketReVoting -> {
-                    val json = JSONObject(intent.getStringExtra(intentReVotingValue))
-                    val time = json.get(timeText).toString()
+                    val time = intent.getIntExtra(intentReVotingValue,0)
 
                     CoroutineScope(Dispatchers.Main).launch {
                         view.setEnable(false)
 
                         view.setOpinionVisible(true)
-                        for (i: Int in time.toInt() / 1000 downTo 0) {
+                        for (i: Int in time / 1000 downTo 0) {
                             if (i == 0) {
                                 view.setOpinionVisible(false)
 
@@ -422,13 +438,15 @@ class ChatGroundPresenter(
                                 view.setOpposeButtonSelected(false)
                             }
                             if (i < 10) {
-                                context?.getString(R.string.chat_ground_dynamic_time_second1,i)?.let {
-                                    view.setTimeText(it)
-                                }
+                                context?.getString(R.string.chat_ground_dynamic_time_second1, i)
+                                    ?.let {
+                                        view.setTimeText(it)
+                                    }
                             } else {
-                                context?.getString(R.string.chat_ground_dynamic_time_second2,i)?.let {
-                                    view.setTimeText(it)
-                                }
+                                context?.getString(R.string.chat_ground_dynamic_time_second2, i)
+                                    ?.let {
+                                        view.setTimeText(it)
+                                    }
                             }
                             delay(1000)//1000
                         }
@@ -436,9 +454,9 @@ class ChatGroundPresenter(
                 }
 
                 socketResult -> {
-                    val json = JSONObject(intent.getStringExtra(emitResultValue))
+                    val winner = intent.getStringExtra(emitResultValue)
 
-                    when (json.get(winnerText).toString()) {
+                    when (winnerText) {
                         neutrality -> {
                             context?.getString(R.string.chat_ground_draw)?.let {
                                 view.setResultText(it)

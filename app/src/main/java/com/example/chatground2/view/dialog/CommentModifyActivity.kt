@@ -4,19 +4,16 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
-import com.example.chatground2.model.KeyName.forumImageServerPath
+import com.example.chatground2.model.Constant.forumImageServerPath
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.dialog_comment_modify.*
 import java.io.File
 
