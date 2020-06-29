@@ -14,6 +14,17 @@ import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.model.dto.CommentDto
 import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.adapter.adapterContract.CommentsAdapterContract
+import com.example.chatground2.model.KeyName.contentText
+import com.example.chatground2.model.KeyName.forumImageServerPath
+import com.example.chatground2.model.KeyName.idText
+import com.example.chatground2.model.KeyName.idxText
+import com.example.chatground2.model.KeyName.imagePathArrayText
+import com.example.chatground2.model.KeyName.imageUploadName
+import com.example.chatground2.model.KeyName.replyCommentIdText
+import com.example.chatground2.model.KeyName.subjectText
+import com.example.chatground2.model.KeyName.titleText
+import com.example.chatground2.model.KeyName.typeText
+import com.example.chatground2.model.KeyName.userText
 import com.example.chatground2.view.dialog.CommentModifyActivity
 import com.example.chatground2.view.modifyForum.ModifyForumActivity
 import com.google.gson.Gson
@@ -29,7 +40,7 @@ import com.squareup.picasso.Picasso
 class DetailForumPresenter(
     private val context: Context,
     val view: DetailForumContract.IDetailForumView
-) : DetailForumContract.IDetailForumPresenter, DetailForumContract.Listener {
+) : DetailForumContract.IDetailForumPresenter, DetailForumContract.CallBack {
 
     private var model: DetailForumModel = DetailForumModel(context)
     private var permission: Permission = Permission(context)
@@ -77,8 +88,8 @@ class DetailForumPresenter(
         view.setEnable(false)
 
         val hashMap = HashMap<String, Any>()
-        hashMap["user"] = shared.getUser()._id
-        isRecommendExist?.let { hashMap["type"] = it }
+        hashMap[userText] = shared.getUser()._id
+        isRecommendExist?.let { hashMap[typeText] = it }
 
         model.recommendForum(idx.toString(), hashMap, this)
     }
@@ -91,11 +102,11 @@ class DetailForumPresenter(
             view.setEnable(false)
 
             val hashMap = HashMap<String, RequestBody>()
-            hashMap["content"] =
+            hashMap[contentText] =
                 RequestBody.create(MediaType.parse("text/plain"), comment)
-            hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
+            hashMap[userText] = RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
             if (!adapterModel?.getReplyCommentId().isNullOrEmpty()) {
-                hashMap["replyCommentId"] = RequestBody.create(
+                hashMap[replyCommentIdText] = RequestBody.create(
                     MediaType.parse("text/plain"),
                     adapterModel?.getReplyCommentId().toString()
                 )
@@ -107,7 +118,7 @@ class DetailForumPresenter(
                 val file = File(commentImagePath)
                 val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
 
-                imagePart = MultipartBody.Part.createFormData("img", file.name, requestBody)
+                imagePart = MultipartBody.Part.createFormData(imageUploadName, file.name, requestBody)
             }
 
             model.writeComment(idx.toString(), hashMap, imagePart, this)
@@ -172,11 +183,11 @@ class DetailForumPresenter(
 
     override fun modifyForum() {
         val intent: Intent = Intent(context, ModifyForumActivity::class.java)
-        intent.putExtra("idx", idx)
-        intent.putExtra("subject", subject)
-        intent.putExtra("title", title)
-        intent.putExtra("content", content)
-        intent.putExtra("imagePathArray", imagePathArray)
+        intent.putExtra(idxText, idx)
+        intent.putExtra(subjectText, subject)
+        intent.putExtra(titleText, title)
+        intent.putExtra(contentText, content)
+        intent.putExtra(imagePathArrayText, imagePathArray)
         view.enterModifyForum(intent)
     }
 
@@ -191,7 +202,7 @@ class DetailForumPresenter(
     override fun setServerImage(imageView: ImageView, path: String) {
 
         imageView.visibility = View.VISIBLE
-        if (path.substring(0, 11) == "forumImages") {
+        if (path.substring(0, 11) == forumImageServerPath) {
             Picasso.get().load(IpAddress.BaseURL + path).into(imageView)
         } else {
             Picasso.get().load(File(path)).into(imageView)
@@ -231,8 +242,8 @@ class DetailForumPresenter(
             view.setTitleText(it.title)
             view.setContentText(it.content)
             view.setDateText(DateFormat.getDateInstance(DateFormat.LONG).format(it.birth))
-            view.setCommentNumText("댓글 : ${it.comments?.size.toString()} 개")
-            view.setRecommendText("추천 : ${it.recommend?.size.toString()} 개")
+            view.setCommentNumText(context.getString(R.string.comment_num,it.comments?.size))
+            view.setRecommendText(context.getString(R.string.recommend_num,it.recommend?.size))
             view.setRecommendButtonText(it.recommend?.size.toString())
             it.user.profile?.let { it1 -> view.setProfileImage(IpAddress.BaseURL + it1) }
             view.setNicknameText(it.user.nickname)
@@ -337,10 +348,10 @@ class DetailForumPresenter(
     private fun onModifyCommentClick(position: Int) {
         adapterModel?.getItem(position)?.let {
             val intent: Intent = Intent(context, CommentModifyActivity::class.java)
-            intent.putExtra("idx", idx)
-            intent.putExtra("id", it._id)
-            intent.putExtra("content", it.content)
-            intent.putExtra("imagePath", it.imageUrl)
+            intent.putExtra(idxText, idx)
+            intent.putExtra(idText, it._id)
+            intent.putExtra(contentText, it.content)
+            intent.putExtra(imagePathArrayText, it.imageUrl)
 
             view.enterModifyComment(intent)
         }

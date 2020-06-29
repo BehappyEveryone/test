@@ -16,12 +16,12 @@ class DetailForumModel (context: Context) {
     //포럼 자세히보기
     fun detailForum(
         idx: String,
-        listener: DetailForumContract.Listener
+        callBack: DetailForumContract.CallBack
     ) {
         serviceGenerator.instance.detailForum(idx)
             .enqueue(object : Callback<ForumDto?> {
                 override fun onFailure(call: Call<ForumDto?>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -29,9 +29,9 @@ class DetailForumModel (context: Context) {
                     response: Response<ForumDto?>
                 ) {
                     if (response.isSuccessful) {
-                        listener.onDetailForumSuccess(response.body())
+                        callBack.onDetailForumSuccess(response.body())
                     } else {
-                        listener.onDetailForumFailure()
+                        callBack.onDetailForumFailure()
                     }
                 }
             })
@@ -40,12 +40,12 @@ class DetailForumModel (context: Context) {
     //포럼 삭제
     fun deleteForum(
         idx: String,
-        listener: DetailForumContract.Listener
+        callBack: DetailForumContract.CallBack
     ) {
         serviceGenerator.instance.deleteForum(idx)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -53,9 +53,9 @@ class DetailForumModel (context: Context) {
                     response: Response<ResponseBody>
                 ) {
                     if (response.isSuccessful) {
-                        listener.onDeleteForumSuccess()
+                        callBack.onDeleteForumSuccess()
                     } else {
-                        listener.onDeleteForumFailure()
+                        callBack.onDeleteForumFailure()
                     }
                 }
             })
@@ -65,12 +65,12 @@ class DetailForumModel (context: Context) {
     fun recommendForum(
         idx: String,
         hashMap: HashMap<String, Any>,
-        listener: DetailForumContract.Listener
+        callBack: DetailForumContract.CallBack
     ) {
         serviceGenerator.instance.recommendForum(idx,hashMap)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -78,9 +78,9 @@ class DetailForumModel (context: Context) {
                     response: Response<ResponseBody>
                 ) {
                     if (response.isSuccessful) {
-                        listener.onRecommendForumSuccess()
+                        callBack.onRecommendForumSuccess()
                     } else {
-                        listener.onRecommendForumFailure()
+                        callBack.onRecommendForumFailure()
                     }
                 }
             })
@@ -91,12 +91,12 @@ class DetailForumModel (context: Context) {
         idx: String,
         hashMap: HashMap<String, RequestBody>,
         imagePart: MultipartBody.Part?,
-        listener: DetailForumContract.Listener
+        callBack: DetailForumContract.CallBack
     ) {
         serviceGenerator.instance.writeComment(idx,hashMap, imagePart).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -104,9 +104,9 @@ class DetailForumModel (context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onWriteCommentSuccess()
+                    callBack.onWriteCommentSuccess()
                 } else {
-                    listener.onWriteCommentFailure()
+                    callBack.onWriteCommentFailure()
                 }
             }
         })
@@ -116,12 +116,12 @@ class DetailForumModel (context: Context) {
     fun deleteComment(
         idx: String,
         commentId:String,
-        listener: DetailForumContract.Listener
+        callBack: DetailForumContract.CallBack
     ) {
         serviceGenerator.instance.deleteComment(idx,commentId).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -129,9 +129,9 @@ class DetailForumModel (context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onDeleteCommentSuccess()
+                    callBack.onDeleteCommentSuccess()
                 } else {
-                    listener.onDeleteCommentFailure()
+                    callBack.onDeleteCommentFailure()
                 }
             }
         })

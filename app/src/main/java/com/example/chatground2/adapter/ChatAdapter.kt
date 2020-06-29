@@ -8,6 +8,13 @@ import com.example.chatground2.R
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.adapter.adapterContract.ChatAdapterContract
 import com.example.chatground2.adapter.holder.*
+import com.example.chatground2.model.KeyName.typeImageText
+import com.example.chatground2.model.KeyName.typeStrategicImageText
+import com.example.chatground2.model.KeyName.typeStrategicTextText
+import com.example.chatground2.model.KeyName.typeStrategicVideoText
+import com.example.chatground2.model.KeyName.typeSystemText
+import com.example.chatground2.model.KeyName.typeTextText
+import com.example.chatground2.model.KeyName.typeVideoText
 import com.example.chatground2.model.dto.ChatDto
 
 class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
@@ -25,29 +32,29 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position].type) {
-            "system" -> 0
-            "text" -> {
+            typeSystemText -> 0
+            typeTextText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     1//right
                 } else {
                     2//left
                 }
             }
-            "strategicText" -> {
+            typeStrategicImageText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     3//right
                 } else {
                     4//left
                 }
             }
-            "image","strategicImage" -> {
+            typeImageText,typeStrategicImageText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     5//right
                 } else {
                     6//left
                 }
             }
-            "video","strategicVideo" -> {
+            typeVideoText,typeStrategicVideoText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     7//right
                 } else {
@@ -105,17 +112,17 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                     .inflate(R.layout.item_chat_video_left, parent, false)
                 ChatVideoLeftViewHolder(context, view,onVideoClickFunc)
             }
-            else -> throw RuntimeException("알 수 없는 뷰 타입 에러")
+            else -> throw RuntimeException(context.getString(R.string.view_type_error))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (items[position].type) {
-            "system" -> {
+            typeSystemText -> {
                 (holder as ChatSystemViewHolder)
                 holder.onBind(items, position)
             }
-            "text" -> {
+            typeTextText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatTextRightViewHolder)
                     holder.onBind(items, position)
@@ -124,7 +131,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                     holder.onBind(items, position)
                 }
             }
-            "strategic" -> {
+            typeStrategicTextText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatStrategicRightViewHolder)
                     holder.onBind(items, position)
@@ -133,7 +140,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                     holder.onBind(items, position)
                 }
             }
-            "image" -> {
+            typeImageText, typeStrategicImageText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatImageRightViewHolder)
                     holder.onBind(items, position)
@@ -142,7 +149,7 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
                     holder.onBind(items, position)
                 }
             }
-            "video" -> {
+            typeVideoText, typeStrategicVideoText -> {
                 if (items[position].user?._id == shared.getUser()._id) {
                     (holder as ChatVideoRightViewHolder)
                     holder.onBind(items, position)
@@ -165,7 +172,6 @@ class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     override fun addItem(chatItem: ChatDto) {
         this.items.add(chatItem)
-        println("채팅아이템 : ${this.items}")
     }
 
     override fun clearItems() {

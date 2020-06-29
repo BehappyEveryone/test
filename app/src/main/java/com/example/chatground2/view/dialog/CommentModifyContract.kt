@@ -26,7 +26,7 @@ interface CommentModifyContract {
         fun finishActivity()
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onModifyCommentSuccess()
         fun onModifyCommentFailure()

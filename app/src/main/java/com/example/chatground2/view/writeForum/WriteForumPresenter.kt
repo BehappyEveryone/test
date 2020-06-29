@@ -7,6 +7,11 @@ import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
+import com.example.chatground2.model.KeyName.contentText
+import com.example.chatground2.model.KeyName.imageUploadName
+import com.example.chatground2.model.KeyName.subjectText
+import com.example.chatground2.model.KeyName.titleText
+import com.example.chatground2.model.KeyName.userText
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -15,7 +20,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class WriteForumPresenter(val context: Context, val view: WriteForumContract.IWriteForumView
-) : WriteForumContract.IWriteForumPresenter, WriteForumContract.Listener {
+) : WriteForumContract.IWriteForumPresenter, WriteForumContract.CallBack {
 
     private var model: WriteForumModel = WriteForumModel(context)
     private var permission:Permission = Permission(context)
@@ -77,10 +82,10 @@ class WriteForumPresenter(val context: Context, val view: WriteForumContract.IWr
             view.setEnable(false)
             view.progressVisible(true)
             val hashMap = HashMap<String, RequestBody>()
-            hashMap["user"] = RequestBody.create(MediaType.parse("text/plain"),shared.getUser()._id)
-            hashMap["subject"] = RequestBody.create(MediaType.parse("text/plain"),subject)
-            hashMap["title"] = RequestBody.create(MediaType.parse("text/plain"),title)
-            hashMap["content"] = RequestBody.create(MediaType.parse("text/plain"),content)
+            hashMap[userText] = RequestBody.create(MediaType.parse("text/plain"),shared.getUser()._id)
+            hashMap[subjectText] = RequestBody.create(MediaType.parse("text/plain"),subject)
+            hashMap[titleText] = RequestBody.create(MediaType.parse("text/plain"),title)
+            hashMap[contentText] = RequestBody.create(MediaType.parse("text/plain"),content)
 
             val imagePart = arrayOfNulls<MultipartBody.Part>(imagePathList.size)
 
@@ -88,7 +93,7 @@ class WriteForumPresenter(val context: Context, val view: WriteForumContract.IWr
                 val file: File = File(imagePathList[i])
                 val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
 
-                imagePart[i] = MultipartBody.Part.createFormData("img",file.name,requestBody)
+                imagePart[i] = MultipartBody.Part.createFormData(imageUploadName,file.name,requestBody)
             }
 
             model.writeForum(hashMap, imagePart, this)

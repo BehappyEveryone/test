@@ -6,6 +6,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.R
+import com.example.chatground2.model.KeyName
+import com.example.chatground2.model.KeyName.agree
+import com.example.chatground2.model.KeyName.neutrality
+import com.example.chatground2.model.KeyName.oppose
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.model.dto.ChatDto
 import com.google.gson.Gson
@@ -25,9 +29,9 @@ class ChatStrategicRightViewHolder(
         items[position].let {
             csrContent.text = it.content
             when (it.user?.opinion) {
-                "agree" -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.blue))
-                "oppose" -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.red))
-                "neutrality" -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.silver))
+                agree -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.blue))
+                oppose -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.red))
+                neutrality -> csrContent.setTextColor(ContextCompat.getColor(context, R.color.silver))
             }
             csrDate.text = DateFormat.getDateInstance(DateFormat.LONG).format(it.date)
         }

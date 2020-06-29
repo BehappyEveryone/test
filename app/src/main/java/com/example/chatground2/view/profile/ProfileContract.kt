@@ -32,7 +32,7 @@ interface ProfileContract {
         fun setEnable(boolean: Boolean)
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onCallUserSuccess(user:UserDto)
         fun onCallUserFailure()

@@ -2,28 +2,33 @@ package com.example.chatground2.`class`
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.chatground2.model.KeyName.autoBoolean
+import com.example.chatground2.model.KeyName.autoEmail
+import com.example.chatground2.model.KeyName.autoPassword
+import com.example.chatground2.model.KeyName.sharedChatGroundText
+import com.example.chatground2.model.KeyName.sharedMessage
+import com.example.chatground2.model.KeyName.userCapital
 import com.example.chatground2.model.dto.UserDto
 import com.google.gson.Gson
 
 class Shared(val context: Context) {
-    val SHARED_PREFERENCE = "ChatGround"
+    val SHARED_PREFERENCE = sharedChatGroundText
 
     private val sp: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFERENCE, Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = sp.edit()
     private val gson = Gson()
 
-    fun getMessage(): String? = sp.getString("message", null)
+    fun getMessage(): String? = sp.getString(sharedMessage, null)
 
     fun getUser(): UserDto {
-        val json = sp.getString("User", "")
-        println("user : $json")
+        val json = sp.getString(userCapital, "")
         return gson.fromJson(json, UserDto::class.java)
     }
 
-    fun getAuto(): Boolean = sp.getBoolean("Auto", false)
-    fun getAutoEmail(): String? = sp.getString("AutoEmail", null)
-    fun getAutoPassword(): String? = sp.getString("AutoPassword", null)
+    fun getAuto(): Boolean = sp.getBoolean(autoBoolean, false)
+    fun getAutoEmail(): String? = sp.getString(autoEmail, null)
+    fun getAutoPassword(): String? = sp.getString(autoPassword, null)
 
     fun setSharedPreference(name: String, value: Any?) {
         when (value) {

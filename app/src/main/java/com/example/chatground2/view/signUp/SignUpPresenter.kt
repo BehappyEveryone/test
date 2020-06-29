@@ -2,12 +2,14 @@ package com.example.chatground2.view.signUp
 
 import android.content.Context
 import com.example.chatground2.`class`.ToastMessage
+import com.example.chatground2.model.Pattern.nicknamePattern
+import com.example.chatground2.model.Pattern.passwordPattern
 import java.util.regex.Pattern
 
 class SignUpPresenter(
     val context: Context,
     val view: SignUpContract.ISignUpView
-) : SignUpContract.ISignUpPresenter, SignUpContract.Listener {
+) : SignUpContract.ISignUpPresenter, SignUpContract.CallBack {
 
     private var model: SignUpModel = SignUpModel(context)
     private var toastMessage: ToastMessage = ToastMessage(context)
@@ -55,11 +57,7 @@ class SignUpPresenter(
     }
 
     override fun validatedPassword(text: String) {
-        passPassword = if (Pattern.matches(
-                "^(?=.*\\d{1,20})(?=.*[a-zA-Z]{1,20}).{8,20}$",//영문 최소 1개이상, 숫자 최소 1개 이상, 8~20자리
-                text
-            )
-        ) {
+        passPassword = if (Pattern.matches(passwordPattern, text)) {
             view.setPasswordCheckAlpha(1.0f)
             true
         } else {
@@ -84,9 +82,9 @@ class SignUpPresenter(
             }
             else -> {
                 val hashMap = HashMap<String, Any>()
-                hashMap["email"] = emailText
-                hashMap["password"] = passwordText
-                hashMap["nickname"] = nicknameText
+                hashMap[emailText] = emailText
+                hashMap[passwordText] = passwordText
+                hashMap[nicknameText] = nicknameText
                 model.signUp(hashMap, this)
             }
         }
@@ -95,7 +93,7 @@ class SignUpPresenter(
     override fun emailOverlapButtonClick(emailText: String) {
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
             val hashMap = HashMap<String, Any>()
-            hashMap["email"] = emailText
+            hashMap[emailText] = emailText
             model.emailOverlap(hashMap, this)
         } else {
             toastMessage.emailForm()
@@ -104,12 +102,12 @@ class SignUpPresenter(
 
     override fun nicknameOverlapButtonClick(nicknameText: String) {
         if (Pattern.matches(
-                "^[a-zA-Z0-9가-힣]{4,12}$",//영문,한글,숫자 아무렇게나 4~12자리
+                nicknamePattern,
                 nicknameText
             )
         ) {
             val hashMap = HashMap<String, Any>()
-            hashMap["nickname"] = nicknameText
+            hashMap[nicknameText] = nicknameText
             model.nicknameOverlap(hashMap, this)
         } else {
             toastMessage.nicknameForm()

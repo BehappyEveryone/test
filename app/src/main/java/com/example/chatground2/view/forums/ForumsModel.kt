@@ -13,12 +13,12 @@ class ForumsModel (context: Context) {
     //포럼 목록
     fun callForums(
         hashMap: HashMap<String, Any>,
-        listener: ForumsContract.Listener
+        callBack: ForumsContract.CallBack
     ) {
         serviceGenerator.instance.callForums(hashMap)
             .enqueue(object : Callback<ArrayList<ForumDto>?> {
                 override fun onFailure(call: Call<ArrayList<ForumDto>?>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -26,9 +26,9 @@ class ForumsModel (context: Context) {
                     response: Response<ArrayList<ForumDto>?>
                 ) {
                     if (response.isSuccessful) {
-                        listener.onCallForumsSuccess(response.body())
+                        callBack.onCallForumsSuccess(response.body())
                     } else {
-                        listener.onCallForumsFailure()
+                        callBack.onCallForumsFailure()
                     }
                 }
             })

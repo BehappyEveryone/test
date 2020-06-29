@@ -13,18 +13,18 @@ class LoginModel(context: Context) {
     //로그인
     fun signIn(
         hashMap: HashMap<String, Any>,
-        listener: LoginContract.Listener
+        callBack: LoginContract.CallBack
     ) {
         serviceGenerator.instance.signIn(hashMap).enqueue(object : Callback<UserDto> {
             override fun onFailure(call: Call<UserDto>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(call: Call<UserDto>, response: Response<UserDto>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { listener.onLoginSuccess(it) }
+                    response.body()?.let { callBack.onLoginSuccess(it) }
                 } else {
-                    listener.onLoginFailure()
+                    callBack.onLoginFailure()
                 }
             }
         })

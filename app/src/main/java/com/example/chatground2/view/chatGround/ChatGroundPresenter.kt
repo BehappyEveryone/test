@@ -14,13 +14,54 @@ import com.example.chatground2.`class`.Permission
 import com.example.chatground2.adapter.adapterContract.ChatAdapterContract
 import com.example.chatground2.adapter.adapterContract.ChatUserAdapterContract
 import com.example.chatground2.api.SocketIo
+import com.example.chatground2.model.KeyName.agree
+import com.example.chatground2.model.KeyName.all
+import com.example.chatground2.model.KeyName.binaryText
+import com.example.chatground2.model.KeyName.contentText
+import com.example.chatground2.model.KeyName.emitLeaveRoom
+import com.example.chatground2.model.KeyName.emitOnMakeRoom
+import com.example.chatground2.model.KeyName.emitOpinionResult
+import com.example.chatground2.model.KeyName.emitReVoteResult
+import com.example.chatground2.model.KeyName.emitResultValue
+import com.example.chatground2.model.KeyName.emitSendMessage
+import com.example.chatground2.model.KeyName.emitStrategicTimeComplete
+import com.example.chatground2.model.KeyName.emitStrategicTimeComplete2
+import com.example.chatground2.model.KeyName.intentMessageValue
+import com.example.chatground2.model.KeyName.intentOfferSubjectValue
+import com.example.chatground2.model.KeyName.intentPresentationOrderValue
+import com.example.chatground2.model.KeyName.intentReVotingValue
+import com.example.chatground2.model.KeyName.intentRoomInfoChangeValue
+import com.example.chatground2.model.KeyName.messageText
+import com.example.chatground2.model.KeyName.neutrality
+import com.example.chatground2.model.KeyName.opinionText
+import com.example.chatground2.model.KeyName.oppose
+import com.example.chatground2.model.KeyName.reVoteText
+import com.example.chatground2.model.KeyName.roomText
+import com.example.chatground2.model.KeyName.socketMessage
+import com.example.chatground2.model.KeyName.socketOfferSubject
+import com.example.chatground2.model.KeyName.socketPresentationOrder
+import com.example.chatground2.model.KeyName.socketReVoting
+import com.example.chatground2.model.KeyName.socketResult
+import com.example.chatground2.model.KeyName.socketRoomInfoChange
+import com.example.chatground2.model.KeyName.subjectText
+import com.example.chatground2.model.KeyName.timeText
+import com.example.chatground2.model.KeyName.typeImageText
+import com.example.chatground2.model.KeyName.typeStrategicImageText
+import com.example.chatground2.model.KeyName.typeStrategicTextText
+import com.example.chatground2.model.KeyName.typeStrategicVideoText
+import com.example.chatground2.model.KeyName.typeText
+import com.example.chatground2.model.KeyName.typeTextText
+import com.example.chatground2.model.KeyName.typeVideoText
+import com.example.chatground2.model.KeyName.userText
+import com.example.chatground2.model.KeyName.usersText
+import com.example.chatground2.model.KeyName.winnerText
+import com.example.chatground2.model.Paths.authorityPath
 import com.example.chatground2.model.dto.ChatDto
 import com.example.chatground2.model.dto.ChatRoomInfoDto
 import com.example.chatground2.model.dto.ChatSystemOrderDto
 import com.example.chatground2.model.dto.ChatUserDto
 import com.example.chatground2.service.SocketService
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -56,16 +97,16 @@ class ChatGroundPresenter(
 
     init {
         //받을 브로드캐스트 리시버
-        intentFilter.addAction("onMessage")
-        intentFilter.addAction("onOfferSubject")
-        intentFilter.addAction("onRoomInfoChange")
-        intentFilter.addAction("onPresentationOrder")
-        intentFilter.addAction("reVoting")
-        intentFilter.addAction("result")
+        intentFilter.addAction(socketMessage)
+        intentFilter.addAction(socketOfferSubject)
+        intentFilter.addAction(socketRoomInfoChange)
+        intentFilter.addAction(socketPresentationOrder)
+        intentFilter.addAction(socketReVoting)
+        intentFilter.addAction(socketResult)
     }
 
     override fun getIntent(intent: Intent) {
-        val users = JSONArray(intent.getStringExtra("users"))
+        val users = JSONArray(intent.getStringExtra(usersText))
         val arrayList = ArrayList<ChatUserDto>()
         for (i in 0 until users.length()) {
             arrayList.add(shared.gsonFromJson(users[i].toString(), ChatUserDto::class.java))
@@ -116,19 +157,19 @@ class ChatGroundPresenter(
         if (isAgree) {//agree 버튼을 눌렀을 때
             if (agreeState) {//agree 버튼이 이미 눌러져 있으면
                 view.setAgreeButtonSelected(false)
-                SocketIo.opinion = "neutrality"
+                SocketIo.opinion = neutrality
             } else {//agree 버튼이 이미 눌러져 있는 상태가 아니라면
                 view.setAgreeButtonSelected(true)
-                SocketIo.opinion = "agree"
+                SocketIo.opinion = agree
             }
             view.setOpposeButtonSelected(false)
         } else {
             if (opposeState) {
                 view.setOpposeButtonSelected(false)
-                SocketIo.opinion = "neutrality"
+                SocketIo.opinion = neutrality
             } else {
                 view.setOpposeButtonSelected(true)
-                SocketIo.opinion = "oppose"
+                SocketIo.opinion = oppose
             }
             view.setAgreeButtonSelected(false)
         }
@@ -155,9 +196,9 @@ class ChatGroundPresenter(
     override fun leave() {
         try {
             val data: JSONObject = JSONObject()
-                .put("user", shared.getUser()._id)
-                .put("room", SocketIo.room)
-            socketService?.socketEmit("leaveRoom", data)
+                .put(userText, shared.getUser()._id)
+                .put(roomText, SocketIo.room)
+            socketService?.socketEmit(emitLeaveRoom, data)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -200,9 +241,9 @@ class ChatGroundPresenter(
     }
 
     private fun reset() {
-        SocketIo.opinion = "neutrality"
+        SocketIo.opinion = neutrality
         SocketIo.room = null
-        shared.editorRemove("message")
+        shared.editorRemove(messageText)
         shared.editorCommit()
         view.finishActivity()
     }
@@ -210,15 +251,15 @@ class ChatGroundPresenter(
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
-                "onMessage" -> {
-                    val message: ChatDto? = intent.getParcelableExtra("onMessageValue")
+                socketMessage -> {
+                    val message: ChatDto? = intent.getParcelableExtra(intentMessageValue)
                     message?.let { adapterChatModel?.addItem(it) }
                     adapterChatView?.notifyAdapter()
                     adapterChatModel?.getItemSize()?.let { view.setChatScrollPosition(it - 1) }
                 }
-                "onRoomInfoChange" -> {
+                socketRoomInfoChange -> {
                     val roomInfo: ChatRoomInfoDto =
-                        intent.getParcelableExtra("onRoomInfoChangeValue")
+                        intent.getParcelableExtra(intentRoomInfoChangeValue)
                     val users: ArrayList<ChatUserDto> = roomInfo.users
                     users.forEach { user ->
                         user.opinion?.let {
@@ -232,10 +273,10 @@ class ChatGroundPresenter(
                     adapterChatUserModel?.addItems(users)
                     adapterChatUserView?.notifyAdapter()
                 }
-                "onOfferSubject" -> {
-                    val json = JSONObject(intent.getStringExtra("onOfferSubjectValue"))
-                    val subject = json.get("subject").toString()
-                    val time = json.get("time").toString()
+                socketOfferSubject -> {
+                    val json = JSONObject(intent.getStringExtra(intentOfferSubjectValue))
+                    val subject = json.get(subjectText).toString()
+                    val time = json.get(timeText).toString()
 
                     CoroutineScope(Dispatchers.Main).launch {
                         view.setEnable(false)
@@ -252,43 +293,47 @@ class ChatGroundPresenter(
                                 val opinion: String = SocketIo.opinion
 
                                 val data: JSONObject =
-                                    JSONObject().put("user", shared.getUser()._id)
-                                        .put("room", SocketIo.room)
-                                        .put("opinion", opinion)
-                                socketService?.socketEmit("opinionResult", data)
+                                    JSONObject().put(userText, shared.getUser()._id)
+                                        .put(roomText, SocketIo.room)
+                                        .put(opinionText, opinion)
+                                socketService?.socketEmit(emitOpinionResult, data)
                                 view.setAgreeButtonSelected(false)
                                 view.setOpposeButtonSelected(false)
                             }
                             if (i < 10) {
-                                view.setTimeText("00:0$i")
+                                context?.getString(R.string.chat_ground_dynamic_time_second1,i)?.let {
+                                    view.setTimeText(it)
+                                }
                             } else {
-                                view.setTimeText("00:$i")
+                                context?.getString(R.string.chat_ground_dynamic_time_second2,i)?.let {
+                                    view.setTimeText(it)
+                                }
                             }
                             delay(1000)//1000
                         }
                     }
                 }
-                "onPresentationOrder" -> {
+                socketPresentationOrder -> {
                     val order: ChatSystemOrderDto =
-                        intent.getParcelableExtra("onPresentationOrderValue")
+                        intent.getParcelableExtra(intentPresentationOrderValue)
 
                     CoroutineScope(Dispatchers.Main).launch {
-                        if (order.order == "strategicTimeComplete" || order.order == "strategicTimeComplete2") {
+                        if (order.order == emitStrategicTimeComplete || order.order == emitStrategicTimeComplete2) {
                             strategic = true
                         }
                         when (order.speaking) {
-                            "all" -> {
+                            all -> {
                                 view.setEnable(true)
                             }
-                            "agree" -> {
-                                if (SocketIo.opinion == "agree") {
+                            agree -> {
+                                if (SocketIo.opinion == agree) {
                                     view.setEnable(true)
                                 } else {
                                     view.setEnable(false)
                                 }
                             }
-                            "oppose" -> {
-                                if (SocketIo.opinion == "oppose") {
+                            oppose -> {
+                                if (SocketIo.opinion == oppose) {
                                     view.setEnable(true)
                                 } else {
                                     view.setEnable(false)
@@ -302,35 +347,61 @@ class ChatGroundPresenter(
                             when {
                                 min == 0 && sec == 0 -> {
                                     view.setEnable(false)
-                                    view.setTimeText("00:00")
+                                    context?.getString(R.string.chat_ground_time)?.let {
+                                        view.setTimeText(it)
+                                    }
                                     if (strategic) {
                                         strategic = false
                                     }
 
-                                    val data: JSONObject = JSONObject().put("room", SocketIo.room)
-                                        .put("user", shared.getUser()._id)
+                                    val data: JSONObject = JSONObject().put(roomText, SocketIo.room)
+                                        .put(userText, shared.getUser()._id)
                                     socketService?.socketEmit(order.order, data)
                                 }
                                 min == 0 -> when {
-                                    sec < 10 -> view.setTimeText("00:0$sec")
-                                    else -> view.setTimeText("00:$sec")
+                                    sec < 10 -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_second1,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
+                                    else -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_second2,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
                                 }
                                 min < 10 -> when {
-                                    sec < 10 -> view.setTimeText("0$min:0$sec")
-                                    else -> view.setTimeText("0$min:$sec")
+                                    sec < 10 -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_minute1,min,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
+                                    else -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_minute2,min,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
                                 }
                                 else -> when {
-                                    sec < 10 -> view.setTimeText("$min:0$sec")
-                                    else -> view.setTimeText("$min:$sec")
+                                    sec < 10 -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_minute3,min,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
+                                    else -> {
+                                        context?.getString(R.string.chat_ground_dynamic_time_minute4,min,sec)?.let {
+                                            view.setTimeText(it)
+                                        }
+                                    }
                                 }
                             }
                             delay(1000)
                         }
                     }
                 }
-                "reVoting" -> {
-                    val json = JSONObject(intent.getStringExtra("reVotingValue"))
-                    val time = json.get("time").toString()
+                socketReVoting -> {
+                    val json = JSONObject(intent.getStringExtra(intentReVotingValue))
+                    val time = json.get(timeText).toString()
 
                     CoroutineScope(Dispatchers.Main).launch {
                         view.setEnable(false)
@@ -343,34 +414,38 @@ class ChatGroundPresenter(
                                 val reVote: String = SocketIo.opinion
 
                                 val data: JSONObject =
-                                    JSONObject().put("user", shared.getUser()._id)
-                                        .put("room", SocketIo.room)
-                                        .put("reVote", reVote)
-                                socketService?.socketEmit("reVoteResult", data)
+                                    JSONObject().put(userText, shared.getUser()._id)
+                                        .put(roomText, SocketIo.room)
+                                        .put(reVoteText, reVote)
+                                socketService?.socketEmit(emitReVoteResult, data)
                                 view.setAgreeButtonSelected(false)
                                 view.setOpposeButtonSelected(false)
                             }
                             if (i < 10) {
-                                view.setTimeText("00:0$i")
+                                context?.getString(R.string.chat_ground_dynamic_time_second1,i)?.let {
+                                    view.setTimeText(it)
+                                }
                             } else {
-                                view.setTimeText("00:$i")
+                                context?.getString(R.string.chat_ground_dynamic_time_second2,i)?.let {
+                                    view.setTimeText(it)
+                                }
                             }
                             delay(1000)//1000
                         }
                     }
                 }
 
-                "result" -> {
-                    val json = JSONObject(intent.getStringExtra("resultValue"))
+                socketResult -> {
+                    val json = JSONObject(intent.getStringExtra(emitResultValue))
 
-                    when (json.get("winner").toString()) {
-                        "neutrality" -> {
+                    when (json.get(winnerText).toString()) {
+                        neutrality -> {
                             context?.getString(R.string.chat_ground_draw)?.let {
                                 view.setResultText(it)
                             }
                         }
-                        "agree" -> {
-                            if (SocketIo.opinion == "agree") {
+                        agree -> {
+                            if (SocketIo.opinion == agree) {
                                 context?.getString(R.string.chat_ground_win)?.let {
                                     view.setResultText(it)
                                 }
@@ -380,8 +455,8 @@ class ChatGroundPresenter(
                                 }
                             }
                         }
-                        "oppose" -> {
-                            if (SocketIo.opinion == "oppose") {
+                        oppose -> {
+                            if (SocketIo.opinion == oppose) {
                                 context?.getString(R.string.chat_ground_win)?.let {
                                     view.setResultText(it)
                                 }
@@ -413,23 +488,23 @@ class ChatGroundPresenter(
             socketService = mBinder.getService()
 
             val data: JSONObject =
-                JSONObject().put("room", SocketIo.room).put("user", shared.getUser()._id)
-            socketService?.socketEmit("onMakeRoom", data)
+                JSONObject().put(roomText, SocketIo.room).put(userText, shared.getUser()._id)
+            socketService?.socketEmit(emitOnMakeRoom, data)
         }
     }
 
     override fun sendMessage(message: String) {
         if (message.isNotEmpty()) {
             val data: JSONObject =
-                JSONObject().put("content", message)
-                    .put("user", shared.getUser()._id)
-                    .put("room", SocketIo.room)
+                JSONObject().put(contentText, message)
+                    .put(userText, shared.getUser()._id)
+                    .put(roomText, SocketIo.room)
             if (strategic) {
-                data.put("type", "strategicText")
+                data.put(typeText, typeStrategicTextText)
             } else {
-                data.put("type", "text")
+                data.put(typeText, typeTextText)
             }
-            socketService?.socketEmit("sendMessage", data)
+            socketService?.socketEmit(emitSendMessage, data)
             view.setMessageClear()
         } else {
             toastMessage.textNull()
@@ -438,35 +513,35 @@ class ChatGroundPresenter(
 
     private fun sendFile(file: File, type: Int) {// type0 이미지 type1 비디오
         val binaryData: String = Base64.encodeToString(convertFileToByte(file), Base64.DEFAULT)
-        val data: JSONObject = JSONObject().put("user", shared.getUser()._id)
-            .put("room", SocketIo.room)
-            .put("binaryData", binaryData)
+        val data: JSONObject = JSONObject().put(userText, shared.getUser()._id)
+            .put(roomText, SocketIo.room)
+            .put(binaryText, binaryData)
 
         if (strategic) {
             when (type) {
                 0 -> {
-                    data.put("type", "strategicImage")
-                    data.put("content", "image")
+                    data.put(typeText, typeStrategicImageText)
+                    data.put(contentText, typeImageText)
                 }
                 1 -> {
-                    data.put("type", "strategicVideo")
-                    data.put("content", "video")
+                    data.put(typeText, typeStrategicVideoText)
+                    data.put(contentText, typeVideoText)
                 }
             }
         } else {
             when (type) {
                 0 -> {
-                    data.put("type", "image")
-                    data.put("content", "image")
+                    data.put(typeText, typeImageText)
+                    data.put(contentText, typeImageText)
                 }
                 1 -> {
-                    data.put("type", "video")
-                    data.put("content", "video")
+                    data.put(typeText, typeVideoText)
+                    data.put(contentText, typeVideoText)
                 }
             }
         }
 
-        socketService?.socketEmit("sendMessage", data)
+        socketService?.socketEmit(emitSendMessage, data)
     }
 
     private fun convertFileToByte(file: File): ByteArray {
@@ -489,7 +564,7 @@ class ChatGroundPresenter(
             val videoFile = File(adapterChatModel?.getItem(position)?.content)
             val uri: Uri = FileProvider.getUriForFile(
                 context,
-                "com.example.chatground2.fileprovider",
+                authorityPath,
                 videoFile
             )
             val intent = Intent(Intent.ACTION_VIEW)

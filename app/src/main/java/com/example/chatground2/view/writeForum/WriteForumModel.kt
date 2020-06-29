@@ -16,12 +16,12 @@ class WriteForumModel (context: Context) {
     fun writeForum(
         hashMap: HashMap<String, RequestBody>,
         imagePart: Array<MultipartBody.Part?>,
-        listener: WriteForumContract.Listener
+        callBack: WriteForumContract.CallBack
     ) {
         serviceGenerator.instance.writeForum(hashMap, imagePart).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -29,9 +29,9 @@ class WriteForumModel (context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onSuccess()
+                    callBack.onSuccess()
                 } else {
-                    listener.onFailure()
+                    callBack.onFailure()
                 }
             }
         })

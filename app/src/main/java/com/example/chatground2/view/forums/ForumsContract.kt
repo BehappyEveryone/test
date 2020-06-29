@@ -30,7 +30,7 @@ interface ForumsContract {
         fun setSearchBackground(int: Int)
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onCallForumsSuccess(result:ArrayList<ForumDto>?)
         fun onCallForumsFailure()

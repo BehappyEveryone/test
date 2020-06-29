@@ -23,7 +23,7 @@ interface LoginContract {
         fun clickSignIn():Boolean
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onLoginSuccess(userDto: UserDto)
         fun onLoginFailure()

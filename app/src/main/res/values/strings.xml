@@ -4,6 +4,8 @@
     <string name="title_activity_register">register</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="chat_ground_exit_text">게임에서 나가시겠습니까?</string>
+
     <string name="denied_permission">권한이 거부되었습니다.</string>
     <string name="request_permission">권한 허가해주세요.</string>
     <string name="activity_result_cancel">취소 되었습니다.</string>
@@ -97,12 +99,46 @@
     <string name="logout_text">로그아웃</string>
     <string name="exit_text">로그아웃</string>
 
-    ////////////chatGround layout string
-    ////////////chatGround layout string
-    ////////////chatGround layout string
-    ////////////chatGround layout string
+    <string name="logout_message">정말 로그아웃 하시겠습니까?</string>
+
+    <string name="plus_dialog_title">파일 전송</string>
+    <string name="image_dialog_title">이미지 첨부</string>
+    <string name="default_dialog_title">알림</string>
+    <string name="dialog_item_image">이미지</string>
+    <string name="dialog_item_default_image">이미지</string>
+
+    <string name="default_dialog_cancel">취소</string>
+    <string name="default_dialog_delete">삭제</string>
+    <string name="default_dialog_confirm">확인</string>
+
+    <string name="view_type_error">알 수 없는 뷰 타입 에러</string>
+    <string name="image_load_error">이미지 로드 에러</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="gameExplanation">이 게임은 정치와 같은 평소에 우리가 꺼려하던 주제들에 대해 진솔하게 토론할 공간을 제공해주는 동시에 반대쪽 의견을 자신의 논리로 설득시켜 몇 명이 설득 당했느냐에 따라 승패를 나눠주는 게임입니다.</string>
+
+    <string name="holder_subject">[%s]</string>
+    <string name="holder_num">[%d]개</string>
+    <string name="comment_num">댓글 : %d개</string>
+    <string name="recommend_num">추천 : %d개</string>
+    <string name="chat_ground_dynamic_time_second1">00:0%d</string>
+    <string name="chat_ground_dynamic_time_second2">00:%d</string>
+    <string name="chat_ground_dynamic_time_minute1">0%d1:0%d2</string>
+    <string name="chat_ground_dynamic_time_minute2">0%d1:%d2</string>
+    <string name="chat_ground_dynamic_time_minute3">%d1:0%d2</string>
+    <string name="chat_ground_dynamic_time_minute4">%d1:%d2</string>
+    <string name="set_file_path">file://%s</string>
+
+    <string-array name="file_dialog_items">
+        <item>이미지</item>
+        <item>동영상</item>
+    </string-array>
+
+    <string-array name="profile_dialog_items">
+        <item>이미지</item>
+        <item>기본이미지</item>
+    </string-array>
+
 
     <string-array name="interest">
         <item>기타</item>

@@ -7,6 +7,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import com.example.chatground2.R
+import com.example.chatground2.model.KeyName.forumImageServerPath
+import com.example.chatground2.model.Paths.mediaPath
 import com.example.chatground2.model.RequestCode
 
 class Gallery(val context: Context) {
@@ -30,14 +33,16 @@ class Gallery(val context: Context) {
     }
 
     fun closeCursor() {
-        if(c != null)
-        {
+        if (c != null) {
             c?.close()
         }
     }
 
+    fun isExistFile(path: String): Boolean = path.substring(0, 11) == forumImageServerPath
+
+
     fun openGallery() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val uri: Uri = Uri.parse(mediaPath)
         val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
@@ -45,7 +50,7 @@ class Gallery(val context: Context) {
     }
 
     fun openVideo() {
-        val uri: Uri = Uri.parse("content://media/external/images/media")
+        val uri: Uri = Uri.parse(mediaPath)
         val intent: Intent = Intent(Intent.ACTION_VIEW, uri)
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "video/*"

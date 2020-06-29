@@ -26,7 +26,7 @@ interface SignUpContract {
         fun setNicknameCheckAlpha(float: Float)
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onEmailOverlapSuccess()
         fun onEmailOverlapFailure()

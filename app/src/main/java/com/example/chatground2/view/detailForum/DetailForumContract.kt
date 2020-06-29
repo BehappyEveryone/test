@@ -60,7 +60,7 @@ interface DetailForumContract {
         fun setEnable(boolean: Boolean)
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onWriteCommentSuccess()
         fun onWriteCommentFailure()

@@ -27,7 +27,7 @@ interface ModifyForumContract {
         fun setDefault(subject: String,title:String,content:String)
     }
 
-    interface Listener
+    interface CallBack
     {
         fun onModifySuccess()
         fun onModifyFailure()

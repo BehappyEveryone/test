@@ -114,30 +114,30 @@ class ProfileFragment : Fragment(), View.OnClickListener, ProfileContract.IProfi
 
     override fun logoutDialog() {
         val builder = context?.let { AlertDialog.Builder(it) }
-        builder?.setTitle("알림")
-        builder?.setMessage("정말 로그아웃 하시겠습니까?")
-        builder?.setNegativeButton("취소", null)
-        builder?.setPositiveButton("확인") { _, _ ->
+        builder?.setTitle(getString(R.string.default_dialog_title))
+        builder?.setMessage(getString(R.string.logout_message))
+        builder?.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder?.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.logout()
         }
         builder?.show()
     }
 
     override fun imageDialog() {
-        val items = arrayOf("이미지", "기본 이미지")
+        val items = resources.getStringArray(R.array.profile_dialog_items)
         val dialog = context?.let {
             AlertDialog.Builder(
                 it,
                 android.R.style.Theme_DeviceDefault_Light_Dialog_Alert
             )
         }
-        dialog?.setTitle("이미지 첨부")
+        dialog?.setTitle(getString(R.string.image_dialog_title))
             ?.setItems(items) { _, which ->
                 val selected: String = items[which]
-                if (selected == "이미지") {
+                if (selected == resources.getStringArray(R.array.file_dialog_items)[0]) {
                     presenter?.checkCameraPermission()
                 }
-                if (selected == "기본 이미지") {
+                if (selected == resources.getStringArray(R.array.file_dialog_items)[1]) {
                     presenter?.defaultImage()
                 }
             }

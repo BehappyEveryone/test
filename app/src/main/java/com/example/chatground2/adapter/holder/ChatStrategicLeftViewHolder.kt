@@ -6,6 +6,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.R
+import com.example.chatground2.model.KeyName.agree
+import com.example.chatground2.model.KeyName.neutrality
+import com.example.chatground2.model.KeyName.oppose
 import com.example.chatground2.model.dto.ChatDto
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -27,9 +30,9 @@ class ChatStrategicLeftViewHolder(
         items[position].let {
             cslContent.text = it.content
             when (it.user?.opinion) {
-                "agree" -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.blue))
-                "oppose" -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.red))
-                "neutrality" -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.silver))
+                agree -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.blue))
+                oppose -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.red))
+                neutrality -> cslContent.setTextColor(ContextCompat.getColor(context, R.color.silver))
             }
             cslDate.text = DateFormat.getDateInstance(DateFormat.LONG).format(it.date)
             cslNickname.text = it.user?.nickname

@@ -18,6 +18,7 @@ import com.example.chatground2.model.RequestCode.DETAIL_FORUM
 import com.example.chatground2.model.RequestCode.WRITE_FORUM
 import com.example.chatground2.R
 import com.example.chatground2.adapter.ForumsAdapter
+import com.example.chatground2.model.KeyName.idxText
 import com.example.chatground2.view.detailForum.DetailForumActivity
 import com.example.chatground2.view.writeForum.WriteForumActivity
 import kotlinx.android.synthetic.main.fragment_forums.*
@@ -182,7 +183,7 @@ class ForumsFragment : Fragment(), View.OnClickListener, ForumsContract.IForumsV
         idx?.let {
             startActivityForResult(
                 Intent(context, DetailForumActivity::class.java).putExtra(
-                    "idx",
+                    idxText,
                     it
                 ), DETAIL_FORUM.code
             )

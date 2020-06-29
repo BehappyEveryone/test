@@ -2,15 +2,12 @@ package com.example.chatground2.view.dialog
 
 import android.content.Context
 import com.example.chatground2.api.ServiceGenerator
-import com.example.chatground2.view.modifyForum.ModifyForumContract
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Part
-import retrofit2.http.PartMap
 
 class CommentModifyModel (context: Context) {
     private val serviceGenerator: ServiceGenerator = ServiceGenerator(context)
@@ -21,12 +18,12 @@ class CommentModifyModel (context: Context) {
         id:String,
         hashMap: HashMap<String, RequestBody>,
         imagePart: MultipartBody.Part?,
-        listener: CommentModifyContract.Listener
+        callBack: CommentModifyContract.CallBack
     ) {
         serviceGenerator.instance.modifyComment(idx,id, hashMap, imagePart).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -34,9 +31,9 @@ class CommentModifyModel (context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onModifyCommentSuccess()
+                    callBack.onModifyCommentSuccess()
                 } else {
-                    listener.onModifyCommentFailure()
+                    callBack.onModifyCommentFailure()
                 }
             }
         })

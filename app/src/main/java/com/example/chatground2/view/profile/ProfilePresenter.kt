@@ -3,11 +3,17 @@ package com.example.chatground2.view.profile
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.example.chatground2.R
 import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
 import com.example.chatground2.api.IpAddress
+import com.example.chatground2.model.KeyName.forumImageServerPath
+import com.example.chatground2.model.KeyName.imageUploadName
+import com.example.chatground2.model.KeyName.introduceText
+import com.example.chatground2.model.KeyName.profileText
+import com.example.chatground2.model.KeyName.userCapital
 import com.example.chatground2.model.dto.UserDto
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -15,7 +21,7 @@ import okhttp3.RequestBody
 import java.io.File
 
 class ProfilePresenter(val context: Context, val view: ProfileContract.IProfileView) :
-    ProfileContract.IProfilePresenter, ProfileContract.Listener {
+    ProfileContract.IProfilePresenter, ProfileContract.CallBack {
 
     private var model: ProfileModel = ProfileModel(context)
     private var permission: Permission = Permission(context)
@@ -55,17 +61,17 @@ class ProfilePresenter(val context: Context, val view: ProfileContract.IProfileV
         view.setEnable(false)
         view.progressVisible(true)
         val hashMap = HashMap<String, RequestBody>()
-        hashMap["introduce"] = RequestBody.create(MediaType.parse("text/plain"), introduce)
+        hashMap[introduceText] = RequestBody.create(MediaType.parse("text/plain"), introduce)
 
         var imagePart: MultipartBody.Part? = null
 
         image?.let {
-            if (image?.substring(0, 13) == "profileImages") {
-                hashMap["profile"] = RequestBody.create(MediaType.parse("text/plain"), it)
+            if (image?.substring(0, 13) == forumImageServerPath) {
+                hashMap[profileText] = RequestBody.create(MediaType.parse("text/plain"), it)
             } else {
                 val file: File = File(image)
                 val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
-                imagePart = MultipartBody.Part.createFormData("img", file.name, requestBody)
+                imagePart = MultipartBody.Part.createFormData(imageUploadName, file.name, requestBody)
             }
         }
 
@@ -111,7 +117,7 @@ class ProfilePresenter(val context: Context, val view: ProfileContract.IProfileV
         val currentImageUrl: Uri? = data?.data
         val path = gallery.getPath(currentImageUrl!!)
         image = path
-        image?.let { view.setProfileImage("file://$it") }
+        image?.let { view.setProfileImage(context.getString(R.string.set_file_path,it)) }
     }
 
     override fun closeCursor() {
@@ -119,9 +125,9 @@ class ProfilePresenter(val context: Context, val view: ProfileContract.IProfileV
     }
 
     override fun onCallUserSuccess(user: UserDto) {
-        shared.editorRemove("User")
+        shared.editorRemove(userCapital)
         val userJson = shared.gsonToJson(user)
-        shared.setSharedPreference("User", userJson)
+        shared.setSharedPreference(userCapital, userJson)
         shared.editorCommit()
 
         user.introduce?.let { view.setIntroduce(it) }

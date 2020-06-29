@@ -13,11 +13,11 @@ class SignUpModel(context: Context) {
     //이메일 중복체크
     fun emailOverlap(
         hashMap: HashMap<String, Any>,
-        listener: SignUpContract.Listener
+        callBack: SignUpContract.CallBack
     ) {
         serviceGenerator.instance.emailOverlap(hashMap).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -25,9 +25,9 @@ class SignUpModel(context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onEmailOverlapSuccess()
+                    callBack.onEmailOverlapSuccess()
                 } else {
-                    listener.onEmailOverlapFailure()
+                    callBack.onEmailOverlapFailure()
                 }
             }
         })
@@ -36,12 +36,12 @@ class SignUpModel(context: Context) {
     //닉네임 중복 체크
     fun nicknameOverlap(
         hashMap: HashMap<String, Any>,
-        listener: SignUpContract.Listener
+        callBack: SignUpContract.CallBack
     ) {
         serviceGenerator.instance.nicknameOverlap(hashMap)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -49,9 +49,9 @@ class SignUpModel(context: Context) {
                     response: Response<ResponseBody>
                 ) {
                     if (response.isSuccessful) {
-                        listener.onNicknameOverlapSuccess()
+                        callBack.onNicknameOverlapSuccess()
                     } else {
-                        listener.onNicknameOverlapFailure()
+                        callBack.onNicknameOverlapFailure()
                     }
                 }
             })
@@ -60,18 +60,18 @@ class SignUpModel(context: Context) {
     //회원가입
     fun signUp(
         hashMap: HashMap<String, Any>,
-        listener: SignUpContract.Listener
+        callBack: SignUpContract.CallBack
     ) {
         serviceGenerator.instance.signUp(hashMap).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    listener.onSignUpSuccess()
+                    callBack.onSignUpSuccess()
                 } else {
-                    listener.onSignUpFailure()
+                    callBack.onSignUpFailure()
                 }
             }
         })

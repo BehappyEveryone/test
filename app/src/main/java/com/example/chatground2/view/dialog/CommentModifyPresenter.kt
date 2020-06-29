@@ -7,6 +7,13 @@ import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Permission
 import com.example.chatground2.`class`.Shared
+import com.example.chatground2.model.KeyName.contentText
+import com.example.chatground2.model.KeyName.idText
+import com.example.chatground2.model.KeyName.idxText
+import com.example.chatground2.model.KeyName.imagePathText
+import com.example.chatground2.model.KeyName.imageUploadName
+import com.example.chatground2.model.KeyName.imageUrlText
+import com.example.chatground2.model.KeyName.userText
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -15,7 +22,7 @@ import java.io.File
 class CommentModifyPresenter(
     val context: Context,
     val view: CommentModifyContract.ICommentModifyView
-) : CommentModifyContract.ICommentModifyPresenter, CommentModifyContract.Listener {
+) : CommentModifyContract.ICommentModifyPresenter, CommentModifyContract.CallBack {
 
     private var model: CommentModifyModel = CommentModifyModel(context)
     private var permission: Permission = Permission(context)
@@ -28,11 +35,11 @@ class CommentModifyPresenter(
     private var id: String? = null
 
     override fun getIntent(intent: Intent) {
-        idx = intent.getStringExtra("idx")
-        id = intent.getStringExtra("id")
-        view.setContentText(intent.getStringExtra("content"))
-        view.setCameraImage(intent.getStringExtra("imagePath"))
-        commentImagePath = intent.getStringExtra("imagePath")
+        idx = intent.getStringExtra(idxText)
+        id = intent.getStringExtra(idText)
+        view.setContentText(intent.getStringExtra(contentText))
+        view.setCameraImage(intent.getStringExtra(imagePathText))
+        commentImagePath = intent.getStringExtra(imagePathText)
     }
 
     override fun cameraClick() {
@@ -93,20 +100,20 @@ class CommentModifyPresenter(
             view.progressVisible(true)
 
             val hashMap = HashMap<String, RequestBody>()
-            hashMap["user"] =
+            hashMap[userText] =
                 RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
-            hashMap["content"] = RequestBody.create(MediaType.parse("text/plain"), content)
+            hashMap[contentText] = RequestBody.create(MediaType.parse("text/plain"), content)
 
             var imagePart: MultipartBody.Part? = null
 
             if (!commentImagePath.isNullOrEmpty()) {
-                imagePart = if (commentImagePath?.substring(0, 11) == "forumImages") {
-                    MultipartBody.Part.createFormData("imageUrl", commentImagePath)
+                imagePart = if (gallery.isExistFile(commentImagePath!!)) {
+                    MultipartBody.Part.createFormData(imageUrlText, commentImagePath)
                 } else {
                     val file: File = File(commentImagePath)
                     val requestBody: RequestBody =
                         RequestBody.create(MediaType.parse("image/*"), file)
-                    MultipartBody.Part.createFormData("img", file.name, requestBody)
+                    MultipartBody.Part.createFormData(imageUploadName, file.name, requestBody)
                 }
             }
 
@@ -123,12 +130,22 @@ class CommentModifyPresenter(
     }
 
     override fun onModifyCommentSuccess() {
+        view.progressVisible(false)
+        view.setEnable(true)
+        toastMessage.retrofitSuccess()
+        view.finishActivity()
     }
 
     override fun onModifyCommentFailure() {
+        view.progressVisible(false)
+        view.setEnable(true)
+        toastMessage.retrofitFailure()
     }
 
     override fun onError(t: Throwable) {
-
+        t.printStackTrace()
+        view.progressVisible(false)
+        view.setEnable(true)
+        toastMessage.retrofitSuccess()
     }
 }

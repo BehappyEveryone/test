@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
 import com.example.chatground2.adapter.CommentsAdapter
+import com.example.chatground2.model.KeyName.idxText
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_forum.*
 import kotlinx.android.synthetic.main.activity_detail_forum.DF_camera
@@ -43,7 +44,7 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         lm = LinearLayoutManager(this)
 
         presenter = DetailForumPresenter(this, this).apply {
-            this.idx = intent.getIntExtra("idx", -1)
+            this.idx = intent.getIntExtra(idxText, -1)
             adapterModel = commentsAdapter
             adapterView = commentsAdapter
         }
@@ -145,13 +146,13 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
     }
 
     override fun createCommentImageDialog() {
-        val items = arrayOf("이미지")
+        val items = arrayOf(getString(R.string.dialog_item_image))
         val dialog =
             AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
-        dialog.setTitle("이미지 첨부")
+        dialog.setTitle(getString(R.string.image_dialog_title))
             .setItems(items) { _, which ->
                 val selected: String = items[which]
-                if (selected == "이미지") {
+                if (selected == getString(R.string.dialog_item_image)) {
                     presenter?.checkCameraPermission()
                 }
             }
@@ -197,10 +198,10 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
 
     override fun deleteCommentImageDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.image_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("삭제") { _, _ ->
+        builder.setNegativeButton(getString(R.string.default_dialog_cancel), null)
+        builder.setPositiveButton(R.string.default_dialog_delete) { _, _ ->
             presenter?.deleteImage()
         }
         builder.show()
@@ -232,10 +233,10 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
         }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(message)
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("확인") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.recommendForum()
         }
         builder.show()
@@ -243,10 +244,10 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
 
     override fun deleteForumDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.forum_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("확인") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.deleteForum()
         }
         builder.show()
@@ -254,10 +255,10 @@ class DetailForumActivity : AppCompatActivity(), DetailForumContract.IDetailForu
 
     override fun deleteCommentDialog(position:Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.comment_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("확인") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.deleteComment(position)
         }
         builder.show()

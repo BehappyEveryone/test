@@ -17,12 +17,12 @@ class ModifyForumModel (context: Context) {
         idx: String,
         hashMap: HashMap<String, RequestBody>,
         imagePart: Array<MultipartBody.Part?>,
-        listener: ModifyForumContract.Listener
+        callBack: ModifyForumContract.CallBack
     ) {
         serviceGenerator.instance.modifyForum(idx, hashMap, imagePart).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(
@@ -30,9 +30,9 @@ class ModifyForumModel (context: Context) {
                 response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    listener.onModifySuccess()
+                    callBack.onModifySuccess()
                 } else {
-                    listener.onModifyFailure()
+                    callBack.onModifyFailure()
                 }
             }
         })

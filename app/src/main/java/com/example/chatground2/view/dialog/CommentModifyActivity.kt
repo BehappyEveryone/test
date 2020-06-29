@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
+import com.example.chatground2.model.KeyName.forumImageServerPath
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.dialog_comment_modify.*
@@ -73,10 +74,10 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
 
     override fun deleteCommentImageDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.image_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("삭제") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_delete) { _, _ ->
             presenter?.deleteImage()
         }
         builder.show()
@@ -119,7 +120,7 @@ class CommentModifyActivity : Activity(), CommentModifyContract.ICommentModifyVi
                 )
             )
         } else {
-            if (path.substring(0, 11) == "forumImages") {
+            if (path.substring(0, 11) == forumImageServerPath) {
                 Picasso.get().load(IpAddress.BaseURL + path).into(CM_camera)
             } else {
                 Picasso.get().load(File(path)).into(CM_camera)

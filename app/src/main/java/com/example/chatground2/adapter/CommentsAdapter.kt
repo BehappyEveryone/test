@@ -55,7 +55,7 @@ class CommentsAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.
                     .inflate(R.layout.item_reply, parent, false)
                 ReplyViewHolder(context, view)
             }
-            else -> throw RuntimeException("알 수 없는 뷰 타입 에러")
+            else -> throw RuntimeException(context.getString(R.string.view_type_error))
         }
     }
 

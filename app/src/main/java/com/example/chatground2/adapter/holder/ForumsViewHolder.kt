@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chatground2.R
 import com.example.chatground2.model.dto.ForumDto
 import kotlinx.android.synthetic.main.item_forums.view.*
 import java.text.DateFormat
@@ -24,10 +25,10 @@ class ForumsViewHolder(
 
     fun onBind(items: ArrayList<ForumDto>, position: Int) {
         items[position].let {
-            subject.text = "[${it.subject}]"
+            subject.text = context.getString(R.string.holder_subject,it.subject)
             title.text = it.title
-            commentNum.text = it.comments?.size.toString() + "개"
-            recommendText.text = it.recommend?.size.toString() + "개"
+            commentNum.text = context.getString(R.string.holder_num,it.comments?.size)
+            recommendText.text = context.getString(R.string.holder_num,it.recommend?.size)
             nickname.text = it.user.nickname
             dateText.text = DateFormat.getDateInstance(DateFormat.LONG).format(it.birth)
             if (it.imageUrl.isNullOrEmpty()) {

@@ -161,16 +161,16 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
     }
 
     override fun plusDialog() {
-        val items = arrayOf("이미지", "동영상")
+        val items = resources.getStringArray(R.array.file_dialog_items)
         val dialog =
             AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
-        dialog.setTitle("파일 전송")
+        dialog.setTitle(getString(R.string.plus_dialog_title))
             .setItems(items) { _, which ->
                 val selected: String = items[which]
-                if (selected == "이미지") {
+                if (selected == resources.getStringArray(R.array.file_dialog_items)[0]) {
                     presenter?.checkCameraPermission(0)
                 }
-                if (selected == "동영상") {
+                if (selected == resources.getStringArray(R.array.file_dialog_items)[1]) {
                     presenter?.checkCameraPermission(1)
                 }
             }
@@ -180,10 +180,10 @@ class ChatGroundActivity : AppCompatActivity(), ChatGroundContract.IChatGroundVi
 
     override fun leaveDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
-        builder.setMessage("게임을 나가시겠습니까?")
-        builder.setNegativeButton("아니오", null)
-        builder.setPositiveButton("네") { _, _ ->
+        builder.setTitle(getString(R.string.default_dialog_title))
+        builder.setMessage(getString(R.string.chat_ground_exit_text))
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.leave()
         }
         builder.show()

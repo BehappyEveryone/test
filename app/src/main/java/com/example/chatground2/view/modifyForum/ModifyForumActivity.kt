@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import com.example.chatground2.api.IpAddress
 import com.example.chatground2.model.RequestCode
 import com.example.chatground2.R
+import com.example.chatground2.`class`.Gallery
+import com.example.chatground2.model.KeyName.forumImageServerPath
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_modify_forum.*
 import kotlinx.android.synthetic.main.activity_write_forum.backButton
@@ -72,23 +74,23 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
 
     override fun createShowImageDialog(imageNum: Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.image_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("삭제") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_delete) { _, _ ->
             presenter?.deleteImage(imageNum)
         }
         builder.show()
     }
 
     override fun createDialog() {
-        val items = arrayOf("이미지")
+        val items = arrayOf(getString(R.string.dialog_item_image))
         val dialog =
             AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
-        dialog.setTitle("이미지 첨부")
+        dialog.setTitle(getString(R.string.image_dialog_title))
             .setItems(items) { _, which ->
                 val selected: String = items[which]
-                if (selected == "이미지") {
+                if (selected == getString(R.string.dialog_item_image)) {
                     presenter?.checkCameraPermission()
                 }
             }
@@ -114,7 +116,7 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
     private fun setServerImage(imageButton: ImageButton, path: String) {
 
         imageButton.visibility = View.VISIBLE
-        if (path.substring(0, 11) == "forumImages") {
+        if (path.substring(0, 11) == forumImageServerPath) {
             Picasso.get().load(IpAddress.BaseURL + path).into(imageButton)
         } else {
             Picasso.get().load(File(path)).into(imageButton)
@@ -192,10 +194,10 @@ class ModifyForumActivity : AppCompatActivity(), ModifyForumContract.IModifyForu
 
     private fun modifyForumDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.default_dialog_title))
         builder.setMessage(getString(R.string.forum_modify_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("확인") { _, _ ->
+        builder.setNegativeButton(R.string.default_dialog_cancel, null)
+        builder.setPositiveButton(R.string.default_dialog_confirm) { _, _ ->
             presenter?.saveClick(
                 MF_title.text.isNullOrEmpty(),
                 MF_content.text.isNullOrEmpty(),

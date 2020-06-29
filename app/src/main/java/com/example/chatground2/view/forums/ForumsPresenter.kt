@@ -5,10 +5,15 @@ import com.example.chatground2.model.dto.ForumDto
 import com.example.chatground2.R
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.adapter.adapterContract.ForumsAdapterContract
+import com.example.chatground2.model.KeyName.bestText
+import com.example.chatground2.model.KeyName.keywordText
+import com.example.chatground2.model.KeyName.kindText
+import com.example.chatground2.model.KeyName.pageText
+import com.example.chatground2.model.KeyName.searchText
 import kotlin.collections.ArrayList
 
 class ForumsPresenter(val context: Context, val view: ForumsContract.IForumsView) :
-    ForumsContract.IForumsPresenter, ForumsContract.Listener {
+    ForumsContract.IForumsPresenter, ForumsContract.CallBack {
 
     private var model: ForumsModel = ForumsModel(context)
     private var toastMessage:ToastMessage = ToastMessage(context)
@@ -33,9 +38,9 @@ class ForumsPresenter(val context: Context, val view: ForumsContract.IForumsView
         pageNum++
 
         val hashMap = HashMap<String, Any>()
-        hashMap["page"] = pageNum
-        hashMap["best"] = isBestForum
-        hashMap["search"] = false
+        hashMap[pageText] = pageNum
+        hashMap[bestText] = isBestForum
+        hashMap[searchText] = false
 
         model.callForums(hashMap, this)
     }
@@ -46,11 +51,11 @@ class ForumsPresenter(val context: Context, val view: ForumsContract.IForumsView
         pageNum++
 
         val hashMap = HashMap<String, Any>()
-        hashMap["page"] = pageNum
-        hashMap["best"] = isBestForum
-        hashMap["search"] = true
-        hashMap["kind"] = kind
-        hashMap["keyword"] = keyword
+        hashMap[pageText] = pageNum
+        hashMap[bestText] = isBestForum
+        hashMap[searchText] = true
+        hashMap[kindText] = kind
+        hashMap[keywordText] = keyword
 
         model.callForums(hashMap, this)
     }

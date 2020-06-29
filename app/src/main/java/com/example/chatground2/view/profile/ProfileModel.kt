@@ -15,12 +15,12 @@ class ProfileModel (context: Context) {
 
     fun callUser(
         email: String,
-        listener: ProfileContract.Listener
+        callBack: ProfileContract.CallBack
     ) {
         serviceGenerator.instance.callUser(email)
             .enqueue(object : Callback<UserDto> {
                 override fun onFailure(call: Call<UserDto>, t: Throwable) {
-                    listener.onError(t)
+                    callBack.onError(t)
                 }
 
                 override fun onResponse(
@@ -28,9 +28,9 @@ class ProfileModel (context: Context) {
                     response: Response<UserDto>
                 ) {
                     if (response.isSuccessful) {
-                        response.body()?.let { listener.onCallUserSuccess(it) }
+                        response.body()?.let { callBack.onCallUserSuccess(it) }
                     } else {
-                        listener.onCallUserFailure()
+                        callBack.onCallUserFailure()
                     }
                 }
             })
@@ -41,19 +41,19 @@ class ProfileModel (context: Context) {
         email:String,
         hashMap: HashMap<String, RequestBody>,
         imagePart: MultipartBody.Part?,
-        listener: ProfileContract.Listener
+        callBack: ProfileContract.CallBack
     ) {
         serviceGenerator.instance.modifyProfile(email,hashMap, imagePart).enqueue(object :
             Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onError(t)
+                callBack.onError(t)
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    listener.onSaveSuccess()
+                    callBack.onSaveSuccess()
                 } else {
-                    listener.onSaveFailure()
+                    callBack.onSaveFailure()
                 }
             }
         })

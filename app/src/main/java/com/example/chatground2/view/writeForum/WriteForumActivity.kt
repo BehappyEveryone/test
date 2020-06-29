@@ -83,23 +83,23 @@ class WriteForumActivity : AppCompatActivity(), WriteForumContract.IWriteForumVi
 
     override fun createShowImageDialog(imageNum: Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("알림")
+        builder.setTitle(getString(R.string.plus_dialog_title))
         builder.setMessage(getString(R.string.image_delete_message))
-        builder.setNegativeButton("취소", null)
-        builder.setPositiveButton("삭제") { _, _ ->
+        builder.setNegativeButton(getString(R.string.default_dialog_cancel), null)
+        builder.setPositiveButton(getString(R.string.default_dialog_delete)) { _, _ ->
             presenter?.deleteImage(imageNum)
         }
         builder.show()
     }
 
     override fun createDialog() {
-        val items = arrayOf("이미지")
+        val items = arrayOf(getString(R.string.dialog_item_image))
         val dialog =
             AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
-        dialog.setTitle("이미지 첨부")
+        dialog.setTitle(getString(R.string.image_dialog_title))
             .setItems(items) { _, which ->
                 val selected: String = items[which]
-                if (selected == "이미지") {
+                if (selected == getString(R.string.dialog_item_image)) {
                     presenter?.checkCameraPermission()
                 }
             }

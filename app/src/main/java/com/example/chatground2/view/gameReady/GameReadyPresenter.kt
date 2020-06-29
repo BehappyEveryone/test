@@ -3,6 +3,8 @@ package com.example.chatground2.view.gameReady
 import android.content.*
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.chatground2.model.KeyName.socketOnConnect
+import com.example.chatground2.model.KeyName.socketOnDisconnect
 import com.example.chatground2.service.SocketService
 import com.example.chatground2.view.mainActivity.MainContract
 
@@ -17,8 +19,8 @@ class GameReadyPresenter(
 
     init {
         //받을 브로드캐스트 리시버
-        intentFilter.addAction("onConnect")
-        intentFilter.addAction("onDisconnect")
+        intentFilter.addAction(socketOnConnect)
+        intentFilter.addAction(socketOnDisconnect)
     }
 
     override fun disconnectSocket() {
@@ -50,10 +52,10 @@ class GameReadyPresenter(
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == "onConnect") {
+            if (intent?.action == socketOnConnect) {
                 view.setMatching()
             }
-            if (intent?.action == "onDisconnect") {
+            if (intent?.action == socketOnDisconnect) {
                 view.setReady()
             }
         }

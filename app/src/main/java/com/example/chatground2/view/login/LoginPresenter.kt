@@ -3,13 +3,19 @@ package com.example.chatground2.view.login
 import android.content.Context
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
+import com.example.chatground2.model.KeyName.autoBoolean
+import com.example.chatground2.model.KeyName.autoEmail
+import com.example.chatground2.model.KeyName.autoPassword
+import com.example.chatground2.model.KeyName.emailText
+import com.example.chatground2.model.KeyName.passwordText
+import com.example.chatground2.model.KeyName.userCapital
 import com.example.chatground2.model.dto.UserDto
 
 
 class LoginPresenter(
     val context: Context,
     val view: LoginContract.ILoginView
-) : LoginContract.ILoginPresenter, LoginContract.Listener {
+) : LoginContract.ILoginPresenter, LoginContract.CallBack {
     private var model: LoginModel = LoginModel(context)
     private var shared:Shared = Shared(context)
     private var toastMessage:ToastMessage = ToastMessage(context)
@@ -45,8 +51,8 @@ class LoginPresenter(
         }
 
         val hashMap = HashMap<String, Any>()
-        hashMap["email"] = email
-        hashMap["password"] = password
+        hashMap[emailText] = email
+        hashMap[passwordText] = password
 
         view.setEnable(false)
         model.signIn(hashMap, this)
@@ -57,11 +63,11 @@ class LoginPresenter(
         val password = userDto.password
         val userJson = shared.gsonToJson(userDto)
         shared.editorClear()
-        shared.setSharedPreference("User", userJson)
+        shared.setSharedPreference(userCapital, userJson)
         if(view.isAutoLogin()) {
-            shared.setSharedPreference("Auto",true)
-            shared.setSharedPreference("AutoEmail",email)
-            shared.setSharedPreference("AutoPassword",password)
+            shared.setSharedPreference(autoBoolean,true)
+            shared.setSharedPreference(autoEmail,email)
+            shared.setSharedPreference(autoPassword,password)
         }
         shared.editorCommit()
         view.setEnable(true)

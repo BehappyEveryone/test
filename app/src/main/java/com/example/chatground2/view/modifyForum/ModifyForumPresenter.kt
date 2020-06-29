@@ -7,6 +7,14 @@ import com.example.chatground2.`class`.Gallery
 import com.example.chatground2.`class`.ToastMessage
 import com.example.chatground2.`class`.Shared
 import com.example.chatground2.`class`.Permission
+import com.example.chatground2.model.KeyName.contentText
+import com.example.chatground2.model.KeyName.idxText
+import com.example.chatground2.model.KeyName.imagePathArrayText
+import com.example.chatground2.model.KeyName.imageUploadName
+import com.example.chatground2.model.KeyName.imageUrlText
+import com.example.chatground2.model.KeyName.subjectText
+import com.example.chatground2.model.KeyName.titleText
+import com.example.chatground2.model.KeyName.userText
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -14,7 +22,7 @@ import java.io.File
 
 class ModifyForumPresenter(
     val context: Context, val view: ModifyForumContract.IModifyForumView
-) : ModifyForumContract.IModifyForumPresenter, ModifyForumContract.Listener {
+) : ModifyForumContract.IModifyForumPresenter, ModifyForumContract.CallBack {
 
     private var model: ModifyForumModel = ModifyForumModel(context)
     private var permission: Permission = Permission(context)
@@ -26,46 +34,51 @@ class ModifyForumPresenter(
     private var imagePathArray: ArrayList<String> = ArrayList()
 
     override fun getIntent(intent: Intent) {
-        intent.getStringExtra("subject")
-        intent.getStringExtra("title")
-        intent.getStringExtra("content")
-        imagePathArray.addAll(intent.getSerializableExtra("imagePathArray") as ArrayList<String>)
-        idx = intent.getIntExtra("idx", -1)
+        imagePathArray.addAll(intent.getSerializableExtra(imagePathArrayText) as ArrayList<String>)
+        idx = intent.getIntExtra(idxText, -1)
 
         view.setDefault(
-            intent.getStringExtra("subject"),
-            intent.getStringExtra("title"),
-            intent.getStringExtra("content")
+            intent.getStringExtra(subjectText),
+            intent.getStringExtra(titleText),
+            intent.getStringExtra(contentText)
         )
         view.setImage(imagePathArray)
         //셋이미지
     }
 
-    override fun saveClick(isTitleEmpty:Boolean,isContentEmpty:Boolean,subject:String,title:String,content:String) {
+    override fun saveClick(
+        isTitleEmpty: Boolean,
+        isContentEmpty: Boolean,
+        subject: String,
+        title: String,
+        content: String
+    ) {
         if (!isTitleEmpty && !isContentEmpty) {
             view.setEnable(false)
             view.progressVisible(true)
 
             val hashMap = HashMap<String, RequestBody>()
-            hashMap["user"] =
+            hashMap[userText] =
                 RequestBody.create(MediaType.parse("text/plain"), shared.getUser()._id)
-            hashMap["subject"] =
+            hashMap[subject] =
                 RequestBody.create(MediaType.parse("text/plain"), subject)
-            hashMap["title"] =
+            hashMap[titleText] =
                 RequestBody.create(MediaType.parse("text/plain"), title)
-            hashMap["content"] =
+            hashMap[contentText] =
                 RequestBody.create(MediaType.parse("text/plain"), content)
 
             val imagePart = arrayOfNulls<MultipartBody.Part?>(imagePathArray.size)
 
             for (i in imagePathArray.indices) {
-                if (imagePathArray[i].substring(0, 11) == "forumImages") {
-                    imagePart[i] = MultipartBody.Part.createFormData("imageUrl", imagePathArray[i])
+                if (gallery.isExistFile(imagePathArray[i])) {
+                    imagePart[i] =
+                        MultipartBody.Part.createFormData(imageUrlText, imagePathArray[i])
                 } else {
                     val file: File = File(imagePathArray[i])
                     val requestBody: RequestBody =
                         RequestBody.create(MediaType.parse("image/*"), file)
-                    imagePart[i] = MultipartBody.Part.createFormData("img", file.name, requestBody)
+                    imagePart[i] =
+                        MultipartBody.Part.createFormData(imageUploadName, file.name, requestBody)
                 }
             }
 
